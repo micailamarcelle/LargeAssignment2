@@ -37,6 +37,8 @@ public class Book {
         this.readStatus = Read.UNREAD;
     }
 
+    // ADD IN AN ADDITIONAL CONSTRUCTOR FOR COPYING!!
+
     /*
     Public method for updating the read status of a book to READ. If the book has 
     already been set to READ, then no changes to the Book object are made. This
