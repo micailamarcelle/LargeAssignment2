@@ -29,5 +29,21 @@ public class LibraryCollection {
         return null;
     }
 
-    
+    // Gets a set of books with a particular author (note that the books in the returned
+    // ArrayList are a copy!)
+    public ArrayList<Book> getBooksWithAuthor(String author) {
+        return null;
+    }
+
+    // Gets a set of books with a particular title(not that the books in the returned 
+    // ArrayList are a copy!)
+    public ArrayList<Book> getBooksWithTitle(String title) {
+        return null;
+    }
+
+    // Gets a set of books with a particular rating (note that the books in the returned
+    // ArrayList are a copy!)
+    public ArrayList<Book> getBooksWithRating(int rating) {
+        return null;
+    }
 }
