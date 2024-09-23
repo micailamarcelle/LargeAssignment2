@@ -46,4 +46,49 @@ public class LibraryCollection {
     public ArrayList<Book> getBooksWithRating(int rating) {
         return null;
     }
+
+    // Allows a book with a specific title and author to be added to the library collection
+    // Assumes that this book is not already in the collection
+    public void addBook(String title, String author) {
+
+    }
+
+    // Determines whether a book with a given title and author already exist within the
+    // library collection, returning true if so and false otherwise
+    public boolean alreadyInCollection(String title, String author) {
+        return false;
+    }
+
+    // Sets the book with a particular title and author to read
+    public void setToRead(String title, String author) {
+
+    }
+
+    // Updates the rating for a particular book, assuming that the book is in the collection
+    public void updateBookRating(String title, String author, int rating) {
+
+    }
+
+    // Gets a list of all the books that have been read (note that this returns a copy of
+    // these books within the ArrayList). These will be sorted by title
+    public ArrayList<Book> allReadBooks() {
+        return null;
+    }
+
+    // Gets a list of all the books that have not been read (note that this returns a copy 
+    // of these books within the ArrayList). These will be sorted by title
+    public ArrayList<Book> allUnreadBooks() {
+        return null;
+    }
+
+    // Gets a random book from the library collection (note that a copy of this book is 
+    // returned)
+    public Book getRandomBook() {
+        return null;
+    }
+
+    // Adds all of the books from a file into the library collection
+    public void addBooksFromFile(String filename) {
+        
+    }
 }

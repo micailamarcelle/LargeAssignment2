@@ -12,7 +12,7 @@ public class MyLibrary {
     public static void main(String[] args) {
         // search
         String searchType = "";
-        while !(searchType.equals("title") || searchType.equals("author") || searchType.equals("book")) {
+        while (!(searchType.equals("title") || searchType.equals("author") || searchType.equals("book"))) {
             System.out.print("Enter search type (title, author, or book): ");
             String searchType = new Scanner(System.in).nextLine().toLowerCase();
         }

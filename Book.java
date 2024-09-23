@@ -10,6 +10,8 @@ to differing characteristics.
  */
 
 // NEED TO DO: ADD IN DESCRIPTION OF HOW THIS CLASS MAINTAINS ENCAPSULATION
+// NEED TO DO: ADD IN GETTERS FOR ALL OF THE INSTANCE VARIABLES TO MAKE THEM ACCESSIBLE
+// (maybe don't need to do all, but determine which are actually necessary)
 
 import java.util.Comparator;
 
