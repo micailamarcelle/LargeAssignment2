@@ -10,6 +10,7 @@ in the collection.
  */
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 // NEED TO DO: UPDATE THE COMMENTS BEFORE THE METHODS TO BE BETTER DOCUMENTED
 
@@ -28,17 +29,65 @@ public class LibraryCollection {
     // used to determine which type of sorting to use. Note that this returns a copy of
     // the ArrayList and the books within it!
     public ArrayList<Book> getSortedCollection(TypeSort howSort) {
-        
+        // First, the Collections class is used to sort the underlying ArrayList according
+        // to the given type of sorting
+        if (howSort.equals(TypeSort.TITLE)) {
+            Collections.sort(bookList, Book.makeComparatorTitle());
+        } else if (howSort.equals(TypeSort.AUTHOR)) {
+            Collections.sort(bookList, Book.makeComparatorAuthor());
+        } else {
+            Collections.sort(bookList, Book.makeComparatorRating());
+        }
+
+        // We then copy all of the books from the sorted ArrayList into a new ArrayList,
+        // with this new ArrayList being returned
+        ArrayList<Book> copy = new ArrayList<Book>();
+        for (int i = 0; i < bookList.size(); i++) {
+            Book curBook = bookList.get(i);
+            copy.add(new Book(curBook.getTitle(), curBook.getAuthor(), curBook.getRating(), curBook.getReadStatus()));
+        }
+        return copy;
     }
 
     // Gets a set of books with a particular author (note that the books in the returned
-    // ArrayList are a copy!)
+    // ArrayList are a copy!). An empty ArrayList is returned if no books with that author
+    // are found
     public ArrayList<Book> getBooksWithAuthor(String author) {
-        return null;
+        // First, we sort the underlying ArrayList by author
+        Collections.sort(bookList, Book.makeComparatorAuthor());
+
+        // Initializes the ArrayList to be returned
+        ArrayList<Book> authorList = new ArrayList<Book>();
+
+        // We then iterate until we find a book with the given author
+        int i = 0;
+        while (i < bookList.size()) {
+            Book curBook = bookList.get(i);
+            if (curBook.getAuthor().equals(author)) {
+                // If we find a book with the given author, then we add all books with this
+                // author into the return list
+                while (i < bookList.size() && curBook.getAuthor().equals(author)) {
+                    Book copy = new Book(curBook.getTitle(), curBook.getAuthor(), curBook.getRating(), curBook.getReadStatus());
+                    authorList.add(copy);
+
+                    // Gets the next book in the list, if such a book exists
+                    i++;
+                    if (i < bookList.size()) {
+                        curBook = bookList.get(i);
+                    }
+                }
+
+            }
+        }
+
+        // We then return the resulting list of Book objects, which will be empty if
+        // no books with the specified author are present in the collection.
+        return authorList;
     }
 
     // Gets a set of books with a particular title(not that the books in the returned 
-    // ArrayList are a copy!)
+    // ArrayList are a copy!). If there are no books in the collection with this title,
+    // then an empty ArrayList is simply returned
     public ArrayList<Book> getBooksWithTitle(String title) {
         return null;
     }

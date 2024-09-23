@@ -93,6 +93,22 @@ public class Book {
     }
 
     /*
+    Public getter for the rating of a particular book. Takes no inputs, and returns
+    an integer representing the book's rating
+     */
+    public int getRating() {
+        return rating;
+    }
+
+    /*
+    Public getter for the read status of a particular book. Takes no inputs, and returns
+    a Read enum type representing the book's read status
+     */
+    public Read getReadStatus() {
+        return readStatus;
+    }
+
+    /*
     Public factory method for returning an object implementing the Comparator<Book> 
     interface. Specifically, this Comparator object will be constructed in order to
     allow for the Book objects to be sorted in terms of their title, in ascending
