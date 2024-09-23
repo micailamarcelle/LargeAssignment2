@@ -10,8 +10,8 @@ to differing characteristics.
  */
 
 // NEED TO DO: ADD IN DESCRIPTION OF HOW THIS CLASS MAINTAINS ENCAPSULATION
-// NEED TO DO: ADD IN GETTERS FOR ALL OF THE INSTANCE VARIABLES TO MAKE THEM ACCESSIBLE
-// (maybe don't need to do all, but determine which are actually necessary)
+// NEED TO DO: ADD IN AN EQUALS METHOD TO DETERMINE WHEN TWO BOOKS ARE THE SAME 
+// likely base this on author and title! other two pieces shouldn't matter for equality
 
 import java.util.Comparator;
 
@@ -52,6 +52,27 @@ public class Book {
         this.author = author;
         this.rating = rating;
         this.readStatus = readStatus;
+    }
+
+    /*
+    Public method for determining whether a particular Book object is equal to another
+    Book object. This returns true if both books have the same author and title (with
+    rating and read status being ignored), and false if they differ in either of these
+    characteristics. Such a method will be utilized in the LibraryCollection class in
+    order to quickly determine whether a book with a particular author and title is 
+    already in the collection. 
+
+    @pre title != null && author != null
+     */  
+    public boolean equals(Book other) {
+        // Checks to see whether these books have the same title and author
+        if (this.title.equals(other.title) && this.author.equals(other.author)) {
+            // If so, return true
+            return true;
+        } else {
+            // Otherwise, return false
+            return false;
+        }
     }
 
     /*
