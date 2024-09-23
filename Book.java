@@ -25,7 +25,7 @@ public class Book {
     private Read readStatus;
 
     /*
-    Public constructor for the book class, which takes in a title and author, then
+    Public constructor for the Book class, which takes in a title and author, then
     initializes a new Book object. Note that the rating for this Book object is
     initialized to -1, to show that it has not yet been rated, and the read status
     is initializes to UNREAD
@@ -39,7 +39,20 @@ public class Book {
         this.readStatus = Read.UNREAD;
     }
 
-    // ADD IN AN ADDITIONAL CONSTRUCTOR FOR COPYING!!
+    /*
+    Secondary public constructor for the Book class, which effectively acts as a 
+    copy constructor. It takes in a title, author, rating, and read status, then
+    constructs a new Book object with all of the given values as the values for 
+    its instance variables.
+
+    @pre title != null && author != null && rating >= 1 && rating <= 5 && readStatus != null
+     */
+    public Book(String title, String author, int rating, Read readStatus) {
+        this.title = title;
+        this.author = author;
+        this.rating = rating;
+        this.readStatus = readStatus;
+    }
 
     /*
     Public method for updating the read status of a book to READ. If the book has 
@@ -64,6 +77,22 @@ public class Book {
     }
 
     /*
+    Public getter for the title of a particular book. Takes no inputs, and returns 
+    a String representing the book's title.
+     */
+    public String getTitle() {
+        return title;
+    }
+
+    /*
+    Public getter for the for the author of a particular book. Takes no inputs, and
+    returns a String representing the book's author
+     */
+    public String getAuthor() {
+        return author;
+    }
+
+    /*
     Public factory method for returning an object implementing the Comparator<Book> 
     interface. Specifically, this Comparator object will be constructed in order to
     allow for the Book objects to be sorted in terms of their title, in ascending
@@ -77,6 +106,42 @@ public class Book {
         return new Comparator<Book>() {
             public int compare(Book book1, Book book2) {
                 return book1.title.compareTo(book2.title);
+            }
+        };
+    }
+
+    /*
+    Public factory method for returning an object implementing the Comparator<Book> 
+    interface. Specifically, this Comparator object will be constructed in order to
+    allow for the Book objects to be sorted in terms of their author, in ascending
+    order, which will be necessary for the overall functionality of the LibraryCollection
+    class. This method takes no inputs, and returns an object of the Comparator class,
+    defined within the method itself. As a result, it has no preconditions. Note also
+    that the method is defined as static in order to allow for such a Comparator to 
+    be constructed directly through the class rather than through an instance of it.
+     */
+    public static Comparator<Book> makeComparatorAuthor() {
+        return new Comparator<Book>() {
+            public int compare(Book book1, Book book2) {
+                return book1.author.compareTo(book2.author);
+            }
+        };
+    }
+
+    /*
+    Public factory method for returning an object implementing the Comparator<Book> 
+    interface. Specifically, this Comparator object will be constructed in order to
+    allow for the Book objects to be sorted in terms of their rating, in ascending
+    order, which will be necessary for the overall functionality of the LibraryCollection
+    class. This method takes no inputs, and returns an object of the Comparator class,
+    defined within the method itself. As a result, it has no preconditions. Note also
+    that the method is defined as static in order to allow for such a Comparator to 
+    be constructed directly through the class rather than through an instance of it.
+     */
+    public static Comparator<Book> makeComparatorRating() {
+        return new Comparator<Book>() {
+            public int compare(Book book1, Book book2) {
+                return book1.rating - book2.rating;
             }
         };
     }

@@ -11,6 +11,8 @@ in the collection.
 
 import java.util.ArrayList;
 
+// NEED TO DO: UPDATE THE COMMENTS BEFORE THE METHODS TO BE BETTER DOCUMENTED
+
 public class LibraryCollection {
     // Declares the sole private instance variable of the LibraryCollection class,
     // which is an ArrayList of the 
@@ -26,7 +28,7 @@ public class LibraryCollection {
     // used to determine which type of sorting to use. Note that this returns a copy of
     // the ArrayList and the books within it!
     public ArrayList<Book> getSortedCollection(TypeSort howSort) {
-        return null;
+        
     }
 
     // Gets a set of books with a particular author (note that the books in the returned
