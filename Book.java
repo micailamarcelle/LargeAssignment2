@@ -66,7 +66,12 @@ public class Book {
      */  
     public boolean equals(Book other) {
         // Checks to see whether these books have the same title and author
-        if (this.title.equals(other.title) && this.author.equals(other.author)) {
+        // Note that everything is converted to lowercase to avoid case sensitivity
+        String lowerTitle = this.title.toLowerCase();
+        String lowerOtherTitle = other.title.toLowerCase();
+        String lowerAuthor = this.author.toLowerCase();
+        String lowerOtherAuthor = other.author.toLowerCase();
+        if (lowerTitle.equals(lowerOtherTitle) && lowerAuthor.equals(lowerOtherAuthor)) {
             // If so, return true
             return true;
         } else {

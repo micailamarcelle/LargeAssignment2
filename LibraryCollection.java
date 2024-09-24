@@ -63,14 +63,17 @@ public class LibraryCollection {
         // Initializes the ArrayList to be returned
         ArrayList<Book> authorList = new ArrayList<Book>();
 
+        // Converts the given author name to lowercase to avoid case sensitivity
+        author = author.toLowerCase();
+
         // We then iterate until we find a book with the given author
         int i = 0;
         while (i < bookList.size()) {
             Book curBook = bookList.get(i);
-            if (curBook.getAuthor().equals(author)) {
+            if (curBook.getAuthor().toLowerCase().equals(author)) {
                 // If we find a book with the given author, then we add all books with this
                 // author into the return list
-                while (i < bookList.size() && curBook.getAuthor().equals(author)) {
+                while (i < bookList.size() && curBook.getAuthor().toLowerCase().equals(author)) {
                     // Adds the copy to the ArrayList to be returned
                     Book copy = new Book(curBook.getTitle(), curBook.getAuthor(), curBook.getRating(), curBook.getReadStatus());
                     authorList.add(copy);
@@ -105,14 +108,17 @@ public class LibraryCollection {
         // Initializes the ArrayList to be returned
         ArrayList<Book> titleList = new ArrayList<Book>();
 
+        // Puts the given title in lowercase to avoid case sensitivity
+        title = title.toLowerCase();
+
         // We then iterate until we find a book with the given title
         int i = 0;
         while (i < bookList.size()) {
             Book curBook = bookList.get(i);
-            if (curBook.getTitle().equals(title)) {
+            if (curBook.getTitle().toLowerCase().equals(title)) {
                 // If we find a book with the given title, then we iterate through all such
                 // books, adding copies of them to our ArrayList to be returned
-                while (i < bookList.size() && curBook.getTitle().equals(title)) {
+                while (i < bookList.size() && curBook.getTitle().toLowerCase().equals(title)) {
                     // Adds the copy to the ArrayList to be returned
                     Book copy = new Book(curBook.getTitle(), curBook.getAuthor(), curBook.getRating(), curBook.getReadStatus());
                     titleList.add(copy);
@@ -317,7 +323,8 @@ public class LibraryCollection {
     // example, and that all books within this file are described in this format, with one
     // book being described per line. If the file does not contain any books, then no books
     // are added to the collection. Preconditions are that filename is not null, and that 
-    // the file contains at least one line describing the format
+    // the file contains at least one line describing the format. This method also only adds
+    // books that are not already in the collection
     public void addBooksFromFile(String filename) {
         // First, we open this file and create a corresponding Scanner object for it
         File bookFile = new File(filename);
@@ -355,9 +362,12 @@ public class LibraryCollection {
             }
 
             // We then create a new Book object with this title and author, and add it 
-            // to our collection
-            Book curBook = new Book(curTitle, curAuthor);
-            bookList.add(curBook);
+            // to our collection, if it is not already in the collection. Otherwise,
+            // nothing is done
+            if (!alreadyInCollection(curTitle, curAuthor)) {
+                Book curBook = new Book(curTitle, curAuthor);
+                bookList.add(curBook);
+            }
         }
 
         // Finally, when we're done reading in lines, the Scanner object is closed
