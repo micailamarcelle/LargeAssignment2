@@ -8,6 +8,12 @@ a whole. More specifically, this code will handle the user-facing front-end of t
 code, using the previously-constructed classes to manage user interactions.
  */
 
+// NEED TO DO: add encapsulation description
+// NEED TO DO: put everything in main() in a while loop to allow repeated interaction,
+//              and put all of the code for each task into private helper methods for improved modularity
+// NEED TO DO: replace the model currently being used with a controller
+// NEED TO DO: documentation for helper methods, once written
+
 import java.util.Scanner;
 
 public class MyLibrary {

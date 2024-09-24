@@ -9,11 +9,23 @@ creating Comparator<Book> objects, which will be used to sort Book objects accor
 to differing characteristics. 
  */
 
-// NEED TO DO: ADD IN DESCRIPTION OF HOW THIS CLASS MAINTAINS ENCAPSULATION
-// NEED TO DO: ADD IN AN EQUALS METHOD TO DETERMINE WHEN TWO BOOKS ARE THE SAME 
-// likely base this on author and title! other two pieces shouldn't matter for equality
+// NEED TO DO: ENSURE THAT ALL RETURN VALUES ARE UPDATED
 
 import java.util.Comparator;
+
+/*
+When it comes to maintaining encapsulation, first note that all of the instance variables
+of this class are marked as private, which prevents any direct manipulation. These instance
+variables are also all immutable objects or primitive types, which means that whenver a user
+passes a value for one of these variables into a constructor or setter, they do not maintain
+an external reference that can be used to directly manipulate the internal instance variables.
+However, it is important to note that this class contains setters for the rating and readStatus
+instance variables, which makes the class mutable. Each time a Book is returned within the model,
+though, it's a copy of a Book object within the underlying model to prevent any escaping 
+references, and design by contract is used to help prevent misuse of the setter method for the
+rating instance variable, with input validation being used to ensure that no improper values are
+placed within the Book object. 
+ */
 
 public class Book {
     // Declares the private instance variables, which include a String for the title,

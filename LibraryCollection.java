@@ -34,22 +34,32 @@ is then provided via input validation in the MyLibrary class, which prevents any
 unintended misuse of the methods within this class. 
  */
 
-// NEED TO DO: UPDATE THE COMMENTS BEFORE THE METHODS TO BE BETTER DOCUMENTED
-
 public class LibraryCollection {
     // Declares the sole private instance variable of the LibraryCollection class,
     // which is an ArrayList of the 
     private ArrayList<Book> bookList;
 
-    // Public constructor for the LibraryCollection class, which creates a new (empty)
-    // LibraryCollection object
+    /*
+    Public constructor for the LibraryCollection class, which takes no inputs, and
+    which produces an (empty) LibraryCollection object. Note that the sole private
+    instance variable is initialized to an empty ArrayList of Book objects. Since this
+    method takes no inputs and has no assumptions, it also has no preconditions.
+     */
     public LibraryCollection() {
         this.bookList = new ArrayList<Book>();
     }
 
-    // Gets a sorted version of the underlying ArrayList, with an enumerated type being
-    // used to determine which type of sorting to use. Note that this returns a copy of
-    // the ArrayList and the books within it!
+    /*
+    Public method for obtaining a sorted version of the underlying ArrayList, with an
+    enumerated type (specifically, TypeSort) being the only input, which is used to 
+    determine what type of sorting to utilize. To prevent issues with encapsulation,
+    the ArrayList<Book> that is returned by this method is a copy of the underlying
+    ArrayList<Book> for the class, with each Book object within the ArrayList being
+    copied as well to prevent any escaping references. 
+
+    @pre howSort != null
+    @return ArrayList<Book> of the books currently in the collection, sorted according to howSort
+     */
     public ArrayList<Book> getSortedCollection(TypeSort howSort) {
         // First, the Collections class is used to sort the underlying ArrayList according
         // to the given type of sorting
@@ -71,9 +81,18 @@ public class LibraryCollection {
         return copy;
     }
 
-    // Gets a set of books with a particular author (note that the books in the returned
-    // ArrayList are a copy!). An empty ArrayList is returned if no books with that author
-    // are found
+    /*
+    Public method for obtaining a list of the Book objects currently in the collection that
+    have a particular author. Note that the returned list of Books will not have any particular
+    order, and that if there are no books with the given author currently in the collection, 
+    then an empty ArrayList<Book> will simply be returned. Also, to maintain encapsulation,
+    the ArrayList<Book> that is returned is not connected in any way to the underlying ArrayList
+    of the class, and all Book objects in the returned ArrayList are copies of those in the 
+    actual ArrayList.
+
+    @pre author != null
+    @return ArrayList<Book> of Book objects with the given author
+     */
     public ArrayList<Book> getBooksWithAuthor(String author) {
         // First, we sort the underlying ArrayList by author
         Collections.sort(bookList, Book.makeComparatorAuthor());
@@ -116,9 +135,18 @@ public class LibraryCollection {
         return authorList;
     }
 
-    // Gets a set of books with a particular title(not that the books in the returned 
-    // ArrayList are a copy!). If there are no books in the collection with this title,
-    // then an empty ArrayList is simply returned
+    /*
+    Public method for obtaining a list of the Book objects currently in the collection 
+    that have a particular title. Note that the returned list of Books will not have
+    any particular order, and that if there are no books in the collection with the given
+    title, then an empty ArrayList is simply returned. Also, to maintain encapsulation,
+    the returned ArrayList<Book> has no connection to the underlying ArrayList<Book> of
+    the class, and all Book objects within the returned ArrayList are copies of those in
+    the actual ArrayList of the class. 
+
+    @pre title != null
+    @return ArrayList<Book> of the Books with the given title
+     */
     public ArrayList<Book> getBooksWithTitle(String title) {
         // First, we sort the underlying ArrayList by title
         Collections.sort(bookList, Book.makeComparatorTitle());
@@ -160,9 +188,19 @@ public class LibraryCollection {
         return titleList;
     }
 
-    // Gets a set of books with a particular rating (note that the books in the returned
-    // ArrayList are a copy!). If no books with this rating exist, an empty ArrayList is 
-    // returned
+    /*
+    Public method for obtaining a list of the Book objects currently in the collection that
+    have a particular rating. Note that the returned list of Books will not have any particular
+    order, and that if there are no books in the collection with the given rating, then an 
+    empty ArrayList<Book> will simply be returned. Also, to maintain encapsulation,
+    the returned ArrayList<Book> has no connection to the underlying ArrayList<Book> of
+    the class, and all Book objects within the returned ArrayList are copies of those in
+    the actual ArrayList of the class. It's also assumed that the given rating is within 
+    the valid range from 1-5
+
+    @pre rating >= 1 && rating <= 5
+    @return ArrayList<Book> of the Books currently in the collection with the given rating
+     */
     public ArrayList<Book> getBooksWithRating(int rating) {
         // First, we sort the underlying ArrayList by rating
         Collections.sort(bookList, Book.makeComparatorRating());
@@ -201,18 +239,28 @@ public class LibraryCollection {
         return ratingList;
     }
 
-    // Allows a book with a specific title and author to be added to the library collection
-    // Assumes that this book is not already in the collection! Also, preconditions are that
-    // title and author are not null.
+    /*
+    Public method which takes in two Strings representing the title and author (respectively),
+    and which adds the corresponding Book object into the underlying ArrayList<Book> for the 
+    class. Note that this method assumes that the corresponding Book object has not already
+    been added to the library collection. This method then does not return anything.
+
+    @pre title != null && author != null && !alreadyInCollection(title, author)
+     */
     public void addBook(String title, String author) {
         // Creates a new Book object and adds it to the underlying ArrayList
         Book newBook = new Book(title, author);
         bookList.add(newBook);
     }
 
-    // Determines whether a book with a given title and author already exist within the
-    // library collection, returning true if so and false otherwise. Preconditions are
-    // that title and author are not null
+    /*
+    Public method that can be used to determine whether a book with the given title and
+    author already exists within the collection. This method returns true if the book
+    is already in the collection, and false otherwise. 
+
+    @pre title != null && author != null
+    @return true if the book is already in our library collection, and false otherwise
+     */
     public boolean alreadyInCollection(String title, String author) {
         // Creates a dummy Book object with this title and author
         Book dummy = new Book(title, author);
@@ -230,10 +278,16 @@ public class LibraryCollection {
         return false;
     }
 
-    // Sets the book with a particular title and author to read. Note that this assumes that
-    // all books in the collection are unique, and that if the book has already been marked 
-    // as read, then nothing is changed. Also, if the book cannot be found, then nothing is 
-    // done. Preconditions are that title and author are not null.
+    /*
+    Public method which takes in two Strings representing the title and author, and which marks
+    the corresponding book in the collection as being read. Note that this method assumes that
+    all books in the collection are unique, and that a book with the given title and author
+    is present within the library collection. Furthermore, if the book has already been marked
+    as read, then nothing is actually changed within the program state. The method does not 
+    return anything.
+
+    @pre title != null && author != null && alreadyInCollection(title, author)
+     */
     public void setToRead(String title, String author) {
         // First, a dummy Book is constructed with the same title and author
         Book dummy = new Book(title, author);
@@ -250,10 +304,15 @@ public class LibraryCollection {
         }
     }
 
-    // Updates the rating for a particular book, assuming that the book is in the collection.
-    // Note that this assumes that all books in the collection are unique, and that if the 
-    // desired book cannot be found, then nothing is changed. Preconditions are that title
-    // and author are not null, and that rating is between 1 and 5
+    /*
+    Public method which updates the rating for the book in the collection with the given title
+    and author. Note that this method assumes that all books in the collection are unique, and
+    that a book exists within the collection with the given title and author. Also, it is 
+    assumed that the given rating is within the valid range from 1-5. The method then does not
+    return anything.
+
+    @pre title != null && author != null && rating >= 1 && rating <= 5 && alreadyInCollection(title, author)
+     */
     public void updateBookRating(String title, String author, int rating) {
         // Creates a dummy Book with the desired title and author
         Book dummy = new Book(title, author);
@@ -270,9 +329,18 @@ public class LibraryCollection {
         }
     }
 
-    // Gets a list of all the books that have been read (note that this returns a copy of
-    // these books within the ArrayList). These will be sorted by title. If no books that
-    // are read can be found within the collection, then an empty ArrayList is simply returned
+    /*
+    Public method which obtains a list of all of the Book objects currently in the library
+    collection that have been marked as read, with the returned list being sorted according
+    to the titles of the books. If no books that have been read are present within the library
+    collection, then an empty ArrayList<Book> is simply returned. Also, note that in order to 
+    maintain encapsulation, the returned ArrayList<Book> does not have any connections with the
+    underlying ArrayList<Book> of the class, and that all of the Book objects in the returned
+    ArrayList are copies of those in the underlying ArrayList. This method then does not have 
+    any preconditions, since it has no inputs and makes no assumptions.
+
+    @return ArrayList<Book> of all the Book objects in the collection that have been read
+     */
     public ArrayList<Book> allReadBooks() {
         // First, the underlying ArrayList for the collection is sorted by title
         Collections.sort(bookList, Book.makeComparatorTitle());
@@ -296,9 +364,18 @@ public class LibraryCollection {
         return readBooks;
     }
 
-    // Gets a list of all the books that have not been read (note that this returns a copy 
-    // of these books within the ArrayList). These will be sorted by title. If no books that
-    // are read can be found within the collection, then an empty ArrayList is returned
+    /*
+    Public method which obtains a list of all of the Book objects currently in the library
+    collection that have not been marked as read, with the returned list being sorted according
+    to the titles of the books. If no books that have not been read are present within the library
+    collection, then an empty ArrayList<Book> is simply returned. Also, note that in order to 
+    maintain encapsulation, the returned ArrayList<Book> does not have any connections with the
+    underlying ArrayList<Book> of the class, and that all of the Book objects in the returned
+    ArrayList are copies of those in the underlying ArrayList. This method then does not have 
+    any preconditions, since it has no inputs and makes no assumptions.
+
+    @return ArrayList<Book> of all the Book objects in the collection that have not been read
+     */
     public ArrayList<Book> allUnreadBooks() {
         // First, the underlying ArrayList for the collection is sorted by title
         Collections.sort(bookList, Book.makeComparatorTitle());
@@ -322,8 +399,15 @@ public class LibraryCollection {
         return unreadBooks;
     }
 
-    // Gets a random book from the library collection (note that a copy of this book is 
-    // returned). Note that this assumes that there is at least one book in the collection
+    /*
+    Public method which returns a random Book object corresponding to a book in the library
+    collection. In order to maintain encapsulation, this Book object is actually a copy of
+    one of the Books in the underlying ArrayList<Book> of the class. This method also assumes
+    that at least one Book exists within the library collection.
+
+    @pre !isEmpty()
+    @return Book object which represents a copy of a random book in the library collection
+     */
     public Book getRandomBook() {
         // First, we get a random index within the underlying ArrayList, assuming that this 
         // ArrayList is not empty
@@ -336,13 +420,16 @@ public class LibraryCollection {
         return copy;
     }
 
-    // Adds all of the books from a file into the library collection. Note that this method
-    // assumes that the first line of the text file is simply Title;Author, as in the given
-    // example, and that all books within this file are described in this format, with one
-    // book being described per line. If the file does not contain any books, then no books
-    // are added to the collection. Preconditions are that filename is not null, and that 
-    // the file contains at least one line describing the format. This method also only adds
-    // books that are not already in the collection
+    /*
+    Public method which adds all of the books from a file into the library collection. This 
+    method assumes that the given file is structured in the same manner as the example that
+    was given with the spec, with the first line simply being "Title;Author", and all other
+    lines describing books with this specific format structure (one book per line). Note, 
+    though, that only books that are not already in the library collection are added to 
+    the library collection from the file. This method does not return anything.
+
+    @pre filename != null && (file structure is as described in the spec)
+     */
     public void addBooksFromFile(String filename) {
         // First, we open this file and create a corresponding Scanner object for it
         File bookFile = new File(filename);
@@ -394,6 +481,14 @@ public class LibraryCollection {
 
     // Determines whether the collection of books is empty, returning true if it is,
     // and false otherwise
+    /*
+    Public method for determining whether the library collection is empty; in other words,
+    a method for determining whether the underlying ArrayList<Book> contains any Book
+    objects. Returns true is the underyling ArrayList is empty, and false otherwise. This
+    method has no preconditions, as it makes no assumptions and takes in no inputs.
+
+    @return true if the underlying ArrayList<Book> is empty, false otherwise
+     */
     public boolean isEmpty() {
         if (bookList.size() == 0) {
             return true;
