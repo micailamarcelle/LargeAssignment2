@@ -12,6 +12,20 @@ class for the LibraryCollection model class
 
 import java.util.ArrayList;
 
+/*
+When it comes to maintaining encapsulation within this class, considering that the
+class largely acts as a wrapper for the LibraryCollection class, the task was a 
+relatively simple one. All of the inputs to methods of this class are either immutable
+objects or primitive types, and all of the outputs for the methods of this class do
+not provide the client code with any external references to internal class data, preventing
+any escaping references. The vast majority of the work for maintaining encapsulation
+with the library collection is done in the LibraryCollection, which ensures that all
+of the ArrayLists and Book objects that are returned do not produce any escaping references
+to the underlying data structures of the library collection. Note also that additional
+protection is provided by the MyLibrary class, which uses input validation to ensure
+that none of the methods within this class are being misused in an unintended manner.
+ */
+
 public class LibraryCollectionController {
     // Declares the sole private instance variable of the class, which is a 
     // LibraryCollection object that acts as the underlying model

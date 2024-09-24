@@ -6,7 +6,9 @@ Purpose: This class is designed to organize the Book objects that will
 be stored within the library collection, and will provide methods allowing
 for the sorting of books according to different characteristics, searching
 for books with particular characteristics, and updating the books currently
-in the collection.
+in the collection. Note that the underlying data structure for the collection
+is an ArrayList of Book objects, since using such a data structure allows for 
+new books to be added to the collection easily and efficiently.
  */
 
 import java.io.File;
@@ -15,6 +17,22 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 import java.util.Scanner;
+
+/*
+When it comes to maintaining encapsulation, this class does quite a bit of the 
+heavy lifting for the program as a whole. As is described above, the underlying
+data structure for the library collection is an ArrayList of Book objects. To
+prevent any escaping references from occurring, each time a Book object is returned
+by a method (either directly or within an ArrayList of Books), the actual thing
+being returned is a copy of the Book within the underlying ArrayList, rather than
+the Book object itself. Furthermore, anytime the method returns an ArrayList 
+containing all of the books within the collection, the list being returned is 
+a copy of the underlying ArrayList rather than this underlying ArrayList itself,
+with all of the Book objects within being copied as well. With this, the class is
+able to effectively maintain a great degree of encapsulation. Additional protection
+is then provided via input validation in the MyLibrary class, which prevents any
+unintended misuse of the methods within this class. 
+ */
 
 // NEED TO DO: UPDATE THE COMMENTS BEFORE THE METHODS TO BE BETTER DOCUMENTED
 
