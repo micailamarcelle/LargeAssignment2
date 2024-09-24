@@ -10,6 +10,7 @@ code, using the previously-constructed classes to manage user interactions.
 import java.util.Scanner;
 public class MyLibrary {
     public static void main(String[] args) {
+    	LibraryCollection ourLibrary = new LibraryCollection();
         // Intro message for the Library UI
 	System.out.println("---------------------------");
 	System.out.println("- WELCOME TO YOUR LIBRARY -");
@@ -39,54 +40,54 @@ public class MyLibrary {
         	String searchType = "";
             	while (!(searchType.equals("title") || searchType.equals("author") || searchType.equals("book"))) {
                 	System.out.print("Enter search type (title, author, or book): ");
-                	searchType = new Scanner(System.in).nextLine().toLowerCase();
-			getSortedCollection(searchType);
+                	searchType = new Scanner(System.in).nextLine().toLowerCase();      
             }
+            ourLibrary.getSortedCollection(searchType);
         }
         
         // addBook
         if (commandType.equals("addbook")) {
         	// ask the user for appropriate information about the book
         	// that should be added
-		System.out.println("Enter your book title: ");
-		String newTitle = new Scanner(System.in).nextLine();
+            System.out.println("Enter your book title: ");
+            String newTitle = new Scanner(System.in).nextLine();
 
-		System.out.println("Enter your book author: ");
-		String newAuthor = new Scanner(System.in).nextLine();
+            System.out.println("Enter your book author: ");
+            String newAuthor = new Scanner(System.in).nextLine();
         	
-		// add the book to the collection
-		// check that it is not in collection first
-		if (!(alreadyInCollection(newTitle, newAuthor)) {	
-			addBook(newTitle, newAuthor);
-		}
+            // add the book to the collection
+            // check that it is not in collection first
+            if (!(alreadyInCollection(newTitle, newAuthor))) {	
+                ourLibrary.addBook(newTitle, newAuthor);
+		    }
         }
 
         // setToRead
         if (commandType.equals("settoread")) {
         	// ask user for book they want to update
-		System.out.println("Enter your book title: ");
-		String newTitle = new Scanner(System.in).nextLine();
+            System.out.println("Enter your book title: ");
+            String newTitle = new Scanner(System.in).nextLine();
 
-		System.out.println("Enter your book author: ");
-		String newAuthor = new Scanner(System.in).nextLine();
+            System.out.println("Enter your book author: ");
+            String newAuthor = new Scanner(System.in).nextLine();
 
-		setToRead(newTitle, newAuthor);
+            ourLibrary.setToRead(newTitle, newAuthor);
         }
 
         // rate
         if (commandType.equals("rate")) {
         	// ask the user what book they want to rate
         	// ask for the rating
-		System.out.println("Enter your book title: ");
-		String newTitle = new Scanner(System.in).nextLine();
+            System.out.println("Enter your book title: ");
+            String newTitle = new Scanner(System.in).nextLine();
 
-		System.out.println("Enter your book author: ");
-		String newAuthor = new Scanner(System.in).nextLine();
+            System.out.println("Enter your book author: ");
+            String newAuthor = new Scanner(System.in).nextLine();
 
-		System.out.println("Enter your book rating (1-5): ");
-		String rating = new Scanner(System.in).nextInt();
+            System.out.println("Enter your book rating (1-5): ");
+            String rating = new Scanner(System.in).nextInt();
 
-		updateBookRating(newTitle, newAuthor, rating);
+            ourLibrary.updateBookRating(newTitle, newAuthor, rating);
         }
         
         // getBooks
@@ -97,15 +98,15 @@ public class MyLibrary {
         // suggestRead
         if (commandType.equals("suggestread")) {
         	// retrieve a random unread book from the library
-		getRandomBook();
+        	ourLibrary.getRandomBook();
         }
 
         // addBooks
         if (commandType.equals("addbooks")) {
         	// ask for file name
         	System.out.println("Enter the book file name: ");
-		String fileName = new Scanner(System.in).nextLine();
-		addBooksFromFile(fileName);
+		    String fileName = new Scanner(System.in).nextLine();
+		    ourLibrary.addBooksFromFile(fileName);
         }
     }
 }
