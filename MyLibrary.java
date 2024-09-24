@@ -93,6 +93,29 @@ public class MyLibrary {
         // getBooks
         if (commandType.equals("getbooks")) {
         	// give user options and retrieve and display lists
+		System.out.println("AUTHOR: All books by sorted by author");
+		System.out.println("TITLE: All books by sorted by title");
+		System.out.println("READ: All books that you have read");
+		System.out.println("UNREAD: All books that you have not read");
+		String getType = "";
+		while (!(getType.equals("title") || getType.equals("author") || getType.equals("read") || 
+			getType.equals("unread"))) {
+                	System.out.print("Please enter one of the above options: ");
+                	getType = new Scanner(System.in).nextLine().toLowerCase();
+		}
+		if (getType.equals("author")) {
+			System.out.print("Please enter the author: ");
+			author = new Scanner(System.in).nextLine();
+			ourLibrary.getBooksWithAuthor(author)
+		} else if (getType.equals("title")) {
+			System.out.print("Please enter the title: ");
+			title = new Scanner(System.in).nextLine();
+			ourLibrary.getBooksWithTitle(title);
+		} else if (getType.equals("read")) {
+			ourLibrary.allReadBooks();
+		} else if (getType.equals("unread")) {
+			ourLibrary.allUnreadBooks();
+		}
         }
 
         // suggestRead
@@ -105,8 +128,8 @@ public class MyLibrary {
         if (commandType.equals("addbooks")) {
         	// ask for file name
         	System.out.println("Enter the book file name: ");
-		    String fileName = new Scanner(System.in).nextLine();
-		    ourLibrary.addBooksFromFile(fileName);
+		String fileName = new Scanner(System.in).nextLine();
+		ourLibrary.addBooksFromFile(fileName);
         }
     }
 }
