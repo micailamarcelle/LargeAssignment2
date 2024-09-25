@@ -5,10 +5,10 @@ Course: CSC 335
 Purpose: Implements the main() method for the library collection, so this is the
 file that will be run in order to actually run the library collection program as
 a whole. More specifically, this code will handle the user-facing front-end of the
-code, using the previously-constructed classes to manage user interactions.
+code, using the previously-constructed classes to manage user interactions. Note
+that this represents the View in the Model-View-Controller design pattern.
  */
 
-// NEED TO DO: add encapsulation description
 // NEED TO DO: put everything in main() in a while loop to allow repeated interaction,
 //              and put all of the code for each task into private helper methods for improved modularity
 // NEED TO DO: replace the model currently being used with a controller
@@ -16,9 +16,21 @@ code, using the previously-constructed classes to manage user interactions.
 
 import java.util.Scanner;
 
+/*
+When it comes to maintaining encapsulation, considering that this class posesses no
+instance variables (since it only functions as the view, and is the file that is 
+run to run the overall program), there aren't any opportunities for this class 
+itself to produce any escaping references for internal data. However, this class
+plays a key role in maintaining the encapsulation of the other classes, since it
+uses input validation to ensure that only valid information is being fed into the
+methods of the controller. In this way, this class helps to prevent the underlying
+objects and data structures from being corrupted by improper inputs, thus further
+supporting the overall encapsulation of different elements of the program.
+ */
+
 public class MyLibrary {
     public static void main(String[] args) {
-        LibraryCollection ourLibrary = new LibraryCollection();
+        LibraryCollectionController controller = new LibraryCollectionController();
         // Intro message for the Library UI
         System.out.println("---------------------------");
         System.out.println("- WELCOME TO YOUR LIBRARY -");
@@ -63,7 +75,7 @@ public class MyLibrary {
                 enumSearchType = TypeSort.RATING;
             }
 
-            ourLibrary.getSortedCollection(enumSearchType);
+            controller.cGetSortedCollection(enumSearchType);
         }
 
         // addBook
@@ -78,8 +90,8 @@ public class MyLibrary {
 
             // add the book to the collection
             // check that it is not in collection first
-            if (!(ourLibrary.alreadyInCollection(newTitle, newAuthor))) {
-                ourLibrary.addBook(newTitle, newAuthor);
+            if (!(controller.cAlreadyInCollection(newTitle, newAuthor))) {
+                controller.cAddBook(newTitle, newAuthor);
             }
         }
 
@@ -92,7 +104,7 @@ public class MyLibrary {
             System.out.println("Enter your book author: ");
             String newAuthor = keyboard.nextLine();
 
-            ourLibrary.setToRead(newTitle, newAuthor);
+            controller.cSetToRead(newTitle, newAuthor);
         }
 
         // rate
@@ -108,7 +120,7 @@ public class MyLibrary {
             System.out.println("Enter your book rating (1-5): ");
             int rating = keyboard.nextInt();
 
-            ourLibrary.updateBookRating(newTitle, newAuthor, rating);
+            controller.cUpdateBookRating(newTitle, newAuthor, rating);
         }
 
         // getBooks
@@ -127,22 +139,22 @@ public class MyLibrary {
             if (getType.equals("author")) {
                 System.out.print("Please enter the author: ");
                 String author = keyboard.nextLine();
-                ourLibrary.getBooksWithAuthor(author);
+                controller.cGetBooksWithAuthor(author);
             } else if (getType.equals("title")) {
                 System.out.print("Please enter the title: ");
                 String title = keyboard.nextLine();
-                ourLibrary.getBooksWithTitle(title);
+                controller.cGetBooksWithTitle(title);
             } else if (getType.equals("read")) {
-                ourLibrary.allReadBooks();
+                controller.cAllReadBooks();
             } else if (getType.equals("unread")) {
-                ourLibrary.allUnreadBooks();
+                controller.cAllUnreadBooks();
             }
         }
 
         // suggestRead
         if (commandType.equals("suggestread")) {
             // retrieve a random unread book from the library
-            ourLibrary.getRandomBook();
+            controller.cGetRandomBook();
         }
 
         // addBooks
@@ -150,7 +162,7 @@ public class MyLibrary {
             // ask for file name
             System.out.println("Enter the book file name: ");
             String fileName = keyboard.nextLine();
-            ourLibrary.addBooksFromFile(fileName);
+            controller.cAddBooksFromFile(fileName);
         }
 
         // Closes the Scanner object for the keyboard

@@ -9,8 +9,6 @@ creating Comparator<Book> objects, which will be used to sort Book objects accor
 to differing characteristics. 
  */
 
-// NEED TO DO: ENSURE THAT ALL RETURN VALUES ARE UPDATED
-
 import java.util.Comparator;
 
 /*
@@ -72,9 +70,11 @@ public class Book {
     rating and read status being ignored), and false if they differ in either of these
     characteristics. Such a method will be utilized in the LibraryCollection class in
     order to quickly determine whether a book with a particular author and title is 
-    already in the collection. 
+    already in the collection.  Note that this method is not case sensitive in terms
+    of the title and author instance variables.
 
     @pre title != null && author != null
+    @return true if the Book is equal to other, false otherwise
      */  
     public boolean equals(Book other) {
         // Checks to see whether these books have the same title and author
@@ -117,6 +117,8 @@ public class Book {
     /*
     Public getter for the title of a particular book. Takes no inputs, and returns 
     a String representing the book's title.
+
+    @return a String representing the title of the Book
      */
     public String getTitle() {
         return title;
@@ -125,6 +127,8 @@ public class Book {
     /*
     Public getter for the for the author of a particular book. Takes no inputs, and
     returns a String representing the book's author
+
+    @return a String representing the author of the book
      */
     public String getAuthor() {
         return author;
@@ -133,6 +137,8 @@ public class Book {
     /*
     Public getter for the rating of a particular book. Takes no inputs, and returns
     an integer representing the book's rating
+
+    @return an int representing the rating associated with the book
      */
     public int getRating() {
         return rating;
@@ -141,6 +147,8 @@ public class Book {
     /*
     Public getter for the read status of a particular book. Takes no inputs, and returns
     a Read enum type representing the book's read status
+
+    @return an enumerated type Read object representing the book's read status
      */
     public Read getReadStatus() {
         return readStatus;
@@ -155,6 +163,8 @@ public class Book {
     defined within the method itself. As a result, it has no preconditions. Note also
     that the method is defined as static in order to allow for such a Comparator to 
     be constructed directly through the class rather than through an instance of it.
+
+    @return a Comparator<Book> object used to compare Books alphabetically by title
      */
     public static Comparator<Book> makeComparatorTitle() {
         return new Comparator<Book>() {
@@ -173,6 +183,8 @@ public class Book {
     defined within the method itself. As a result, it has no preconditions. Note also
     that the method is defined as static in order to allow for such a Comparator to 
     be constructed directly through the class rather than through an instance of it.
+
+    @return a Comparator<Book> object used to compare Books alphabetically by author
      */
     public static Comparator<Book> makeComparatorAuthor() {
         return new Comparator<Book>() {
@@ -191,6 +203,8 @@ public class Book {
     defined within the method itself. As a result, it has no preconditions. Note also
     that the method is defined as static in order to allow for such a Comparator to 
     be constructed directly through the class rather than through an instance of it.
+
+    @return a Comparator<Book> object used to compare Books based on their rating
      */
     public static Comparator<Book> makeComparatorRating() {
         return new Comparator<Book>() {

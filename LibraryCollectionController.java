@@ -7,7 +7,7 @@ collection, we chose to utilize the Model-View-Controller design pattern, which
 will allow for pieces of the implementation (i.e. the model, view, or controller)
 to be swapped out in the future, if necessary. To this end, this class acts as the
 Controller element of the MVC pattern, and it essectially functions as a wrapper
-class for the LibraryCollection model class
+class for the LibraryCollection model class.
  */
 
 import java.util.ArrayList;
@@ -24,6 +24,8 @@ of the ArrayLists and Book objects that are returned do not produce any escaping
 to the underlying data structures of the library collection. Note also that additional
 protection is provided by the MyLibrary class, which uses input validation to ensure
 that none of the methods within this class are being misused in an unintended manner.
+Note also that the sole instance variable is defined as private in order to further
+maintain encapsulation.
  */
 
 public class LibraryCollectionController {

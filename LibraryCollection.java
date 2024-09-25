@@ -8,7 +8,8 @@ for the sorting of books according to different characteristics, searching
 for books with particular characteristics, and updating the books currently
 in the collection. Note that the underlying data structure for the collection
 is an ArrayList of Book objects, since using such a data structure allows for 
-new books to be added to the collection easily and efficiently.
+new books to be added to the collection easily and efficiently. Note that this
+class represents the Model element of the Model-View-Controller design pattern.
  */
 
 import java.io.File;
@@ -31,7 +32,8 @@ a copy of the underlying ArrayList rather than this underlying ArrayList itself,
 with all of the Book objects within being copied as well. With this, the class is
 able to effectively maintain a great degree of encapsulation. Additional protection
 is then provided via input validation in the MyLibrary class, which prevents any
-unintended misuse of the methods within this class. 
+unintended misuse of the methods within this class. Note also that the sole instance
+variable is declared as private to further maintain encapsulation.
  */
 
 public class LibraryCollection {
