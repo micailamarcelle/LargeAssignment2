@@ -73,7 +73,7 @@ public class Book {
     already in the collection.  Note that this method is not case sensitive in terms
     of the title and author instance variables.
 
-    @pre title != null && author != null
+    @pre other != null 
     @return true if the Book is equal to other, false otherwise
      */  
     public boolean equals(Book other) {

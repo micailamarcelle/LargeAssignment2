@@ -1,0 +1,59 @@
+File: doc.txt
+Authors: Micaila Marcelle (micailamarcelle) and Elise Bushra (ebushra)
+Course: CSC 335
+Purpose: Outlines the design choices made within the structuring of the library
+collection program for Large Assignment 2.
+
+To understand how our overall program is structured, we first consider the classes
+utilized within the program and the relationships between them. The program as a 
+whole uses the Model-View-Controller (MVC) design pattern, and this was chosen to 
+more simply organize the interactions between the user-facing front-end and the 
+underlying functionalities of the back-end. More specifically, the MyLibrary class 
+acts as the View, the LibraryCollection class acts as the Model, and the 
+LibraryCollectionController class acts as the Controller, which facilitates the 
+communication between the former two classes. The other primary class used within
+this program is then the Book class. This class is designed so that instances of
+it can model individual Book objects within the library collection. Each Book has
+an associated title, author, rating, and read status, with the latter two having
+setters which allow the Book object's rating and read status to be updated (though
+a Book cannot go from read to unread). While this does mean that Book objects are
+mutable, which slightly complicates the maintenance of encapsulation within the 
+program, we felt that having each Book directly associated with its rating and read
+status would be more accurate to how books are kept track of in most virtual library 
+collections, and that this would also help to better consolidate all book-related
+characteristics within the Book class.
+
+Note, also, that this program contains two enumerated types: TypeSort and Read. The 
+Read enum has two possible values, READ and UNREAD, and it is used to more accurately
+model the read status of individual Book objects. On the other hand, the TypeSort enum
+has three possible values, TITLE, AUTHOR, and RATING, and it is used to remove ambiguity
+when telling the model how to sort the library collection, considering that it limits the
+options for sorting to only the three types of sorting we want to do. While we considered
+constructing a third enum to represent the possible ratings, we felt that doing so would
+not differ significantly from using an integer, especially when one considers that to 
+switch from user input to the enum, we would have to check that the given input is in the
+valid range from 1-5 anyways. Hence, we chose to stick with only two enumerated types.
+
+We can then begin to delve into the data structures utilized within the program. Within 
+the LibraryCollection class, it can be seen that the key data structure used to actually
+model the library collection is an ArrayList of Book objects. This allows for new Books to 
+be added to the collection quickly and easily, and ensures that we can both iterate through 
+the list to find particular books and efficiently sort this collection. Sorting, in 
+particular, involves quite a few library classes and interfaces to function properly. For 
+one, within the Book class, there are three factory methods, each of which returns a 
+Comparator<Book> object that corresponds to a particular type of sorting (i.e. sorting by
+title, sorting by author, and sorting by rating). With these factory methods, we can then
+utilize the Collections class to sort the underlying ArrayList<Book> of the model; in 
+particular, we utilize the Collections.sort() method, passing in the underlying ArrayList 
+of Books and a Comparator<Book> object corresponding to the type of sorting that we 
+want to do. This then allows for us to efficiently sort the list of books currently in 
+the library collection according to any of the primary characteristics of the books. 
+
+In addition to the Collections and ArrayList classes, the LibraryCollection class also 
+makes use of the Random and Scanner classes, which are also found in the java.util 
+package. The Random class is used when selecting a random book from the collection, with
+the nextInt() method in particular being used to generate a random index within the underlying
+ArrayList<Book> of the library collection. On the other hand, the Scanner class is used
+in order to read through a file containing the titles and authors of books to be added
+to the collection. With this, the central design choices defining our program are made 
+clear. 
