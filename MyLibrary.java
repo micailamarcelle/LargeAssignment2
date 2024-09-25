@@ -44,128 +44,188 @@ public class MyLibrary {
         System.out.println("getBooks: retrieve and display a list of books");
         System.out.println("suggestRead: choose a random book from library");
         System.out.println("addBooks: add files to your library");
+        System.out.println("STOP: finish using your library");
         System.out.print("\n");
 
         // First, a Scanner object representing the keyboard is constructed
         Scanner keyboard = new Scanner(System.in);
 
-        // Determine the command type
-        String commandType = "";
-        while (!(commandType.equals("search") || commandType.equals("addbook") || commandType.equals("settoread")
-                || commandType.equals("rate") || commandType.equals("getbooks") || commandType.equals("suggestread")
-                || commandType.equals("addbooks"))) {
-            System.out.println("Please enter one of the above: ");
-            commandType = keyboard.nextLine().toLowerCase();
-        }
-
-        // search
-        if (commandType.equals("search")) {
-            String searchType = "";
-            while (!(searchType.equals("title") || searchType.equals("author") || searchType.equals("book"))) {
-                System.out.print("Enter search type (title, author, or book): ");
-                searchType = keyboard.nextLine().toLowerCase();
-            }
-            // Converts to an enumerated type for greater code clarity
-            TypeSort enumSearchType;
-            if (searchType.equals("title")) {
-                enumSearchType = TypeSort.TITLE;
-            } else if (searchType.equals("author")) {
-                enumSearchType = TypeSort.AUTHOR;
-            } else {
-                enumSearchType = TypeSort.RATING;
+        boolean endUse = false;
+        
+        while (!endUse) {
+            // Determine the command type
+            String commandType = "";
+            while (!(commandType.equals("search") || commandType.equals("addbook") || commandType.equals("settoread")
+                    || commandType.equals("rate") || commandType.equals("getbooks") || commandType.equals("suggestread")
+                    || commandType.equals("addbooks") || commandType.equals("stop"))) {
+                if (commandType.equals("stop")) {
+                    endUse = true;
+                }
+                System.out.println("Please enter one of the above: ");
+                commandType = keyboard.nextLine().toLowerCase();
             }
 
-            controller.cGetSortedCollection(enumSearchType);
-        }
-
-        // addBook
-        if (commandType.equals("addbook")) {
-            // ask the user for appropriate information about the book
-            // that should be added
-            System.out.println("Enter your book title: ");
-            String newTitle = keyboard.nextLine();
-
-            System.out.println("Enter your book author: ");
-            String newAuthor = keyboard.nextLine();
-
-            // add the book to the collection
-            // check that it is not in collection first
-            if (!(controller.cAlreadyInCollection(newTitle, newAuthor))) {
-                controller.cAddBook(newTitle, newAuthor);
+            // search
+            if (commandType.equals("search")) {
+                searchHelper();
             }
+    
+            // addBook
+            if (commandType.equals("addbook")) {
+                addBookHelper();
+            }
+    
+            // setToRead
+            if (commandType.equals("settoread")) {
+                setToReadHelp();
+            }
+    
+            // rate
+            if (commandType.equals("rate")) {
+                rateHelper();
+            }
+    
+            // getBooks
+            if (commandType.equals("getbooks")) {
+                getBooksHelper();
+            }
+    
+            // suggestRead
+            if (commandType.equals("suggestread")) {
+                // retrieve a random unread book from the library
+                controller.cGetRandomBook();
+            }
+    
+            // addBooks
+            if (commandType.equals("addbooks")) {
+                // ask for file name
+                System.out.println("Enter the book file name: ");
+                String fileName = keyboard.nextLine();
+                controller.cAddBooksFromFile(fileName);
+            }
+    
+            // Closes the Scanner object for the keyboard
+            keyboard.close();
         }
 
-        // setToRead
-        if (commandType.equals("settoread")) {
-            // ask user for book they want to update
-            System.out.println("Enter your book title: ");
-            String newTitle = keyboard.nextLine();
-
-            System.out.println("Enter your book author: ");
-            String newAuthor = keyboard.nextLine();
-
-            controller.cSetToRead(newTitle, newAuthor);
+        private void searchHelper() {
+                String searchType = "";
+                while (!(searchType.equals("title") || searchType.equals("author") || searchType.equals("book"))) {
+                    System.out.print("Enter search type (title, author, or book): ");
+                    searchType = keyboard.nextLine().toLowerCase();
+                }
+                // Converts to an enumerated type for greater code clarity
+                TypeSort enumSearchType;
+                if (searchType.equals("title")) {
+                    enumSearchType = TypeSort.TITLE;
+                } else if (searchType.equals("author")) {
+                    enumSearchType = TypeSort.AUTHOR;
+                } else {
+                    enumSearchType = TypeSort.RATING;
+                }
+    
+                ourList = controller.cGetSortedCollection(enumSearchType);
+                if (ourList.length() == 0) {
+                    System.out.println("No books match your search :(");
+                } else {
+                    for (int i ==0; i < ourList.length(); i++) {
+                        System.out.println(ourList.get(i));
+                    }
+                }
         }
 
-        // rate
-        if (commandType.equals("rate")) {
-            // ask the user what book they want to rate
-            // ask for the rating
-            System.out.println("Enter your book title: ");
-            String newTitle = keyboard.nextLine();
+        private void addBookHelper() {
+                // ask the user for appropriate information about the book
+                // that should be added
+                System.out.println("Enter your book title: ");
+                String newTitle = keyboard.nextLine();
+    
+                System.out.println("Enter your book author: ");
+                String newAuthor = keyboard.nextLine();
+    
+                // add the book to the collection
+                // check that it is not in collection first
+                if (!(controller.cAlreadyInCollection(newTitle, newAuthor))) {
+                    controller.cAddBook(newTitle, newAuthor);
+                } else {
+                    System.out.println("This book is already in your library!");
+                }
+            }
 
-            System.out.println("Enter your book author: ");
-            String newAuthor = keyboard.nextLine();
+        private void setToReadHelp() {
+                // ask user for book they want to update
+                System.out.println("Enter your book title: ");
+                String newTitle = keyboard.nextLine();
+    
+                System.out.println("Enter your book author: ");
+                String newAuthor = keyboard.nextLine();
 
-            System.out.println("Enter your book rating (1-5): ");
-            int rating = keyboard.nextInt();
-
-            controller.cUpdateBookRating(newTitle, newAuthor, rating);
+                while (!(controller.cAlreadyInCollection(newTitle, newAuthor))) {
+                    System.out.println("Sorry, that book is not in your collection.")
+                    System.out.println("Enter your book title: ");
+                    newTitle = keyboard.nextLine();
+    
+                    System.out.println("Enter your book author: ");
+                    newAuthor = keyboard.nextLine();   
+                }
+                controller.cSetToRead(newTitle, newAuthor);
         }
 
-        // getBooks
-        if (commandType.equals("getbooks")) {
+        private void rateHelper() {
+                // ask the user what book they want to rate
+                // ask for the rating
+                System.out.println("Enter your book title: ");
+                String newTitle = keyboard.nextLine();
+    
+                System.out.println("Enter your book author: ");
+                String newAuthor = keyboard.nextLine();
+
+                while (!(controller.cAlreadyInCollection(newTitle, newAuthor))) {
+                    System.out.println("Sorry, that book is not in your collection.")
+                    System.out.println("Enter your book title: ");
+                    newTitle = keyboard.nextLine();
+    
+                    System.out.println("Enter your book author: ");
+                    newAuthor = keyboard.nextLine();   
+                }
+    
+                System.out.println("Enter your book rating (1-5): ");
+                int rating = keyboard.nextInt();
+                while (!(rating >= 1 || rating <= 5)) {
+                    System.out.println("Sorry, that's not between 1 and 5. Enter your book rating (1-5): ");
+                    rating = keyboard.nextInt();
+                }
+    
+                controller.cUpdateBookRating(newTitle, newAuthor, rating);
+        }
+
+        private void getBooksHelper() {
             // give user options and retrieve and display lists
-            System.out.println("AUTHOR: All books by sorted by author");
-            System.out.println("TITLE: All books by sorted by title");
-            System.out.println("READ: All books that you have read");
-            System.out.println("UNREAD: All books that you have not read");
-            String getType = "";
-            while (!(getType.equals("title") || getType.equals("author") || getType.equals("read") ||
-                    getType.equals("unread"))) {
-                System.out.print("Please enter one of the above options: ");
-                getType = keyboard.nextLine().toLowerCase();
-            }
-            if (getType.equals("author")) {
-                System.out.print("Please enter the author: ");
-                String author = keyboard.nextLine();
-                controller.cGetBooksWithAuthor(author);
-            } else if (getType.equals("title")) {
-                System.out.print("Please enter the title: ");
-                String title = keyboard.nextLine();
-                controller.cGetBooksWithTitle(title);
-            } else if (getType.equals("read")) {
-                controller.cAllReadBooks();
-            } else if (getType.equals("unread")) {
-                controller.cAllUnreadBooks();
-            }
+                System.out.println("AUTHOR: All books by sorted by author");
+                System.out.println("TITLE: All books by sorted by title");
+                System.out.println("READ: All books that you have read");
+                System.out.println("UNREAD: All books that you have not read");
+                String getType = "";
+                while (!(getType.equals("title") || getType.equals("author") || getType.equals("read") ||
+                        getType.equals("unread"))) {
+                    System.out.print("Please enter one of the above options: ");
+                    getType = keyboard.nextLine().toLowerCase();
+                }
+                if (getType.equals("author")) {
+                    System.out.print("Please enter the author: ");
+                    String author = keyboard.nextLine();
+                    controller.cGetBooksWithAuthor(author);
+                } else if (getType.equals("title")) {
+                    System.out.print("Please enter the title: ");
+                    String title = keyboard.nextLine();
+                    controller.cGetBooksWithTitle(title);
+                } else if (getType.equals("read")) {
+                    controller.cAllReadBooks();
+                } else if (getType.equals("unread")) {
+                    controller.cAllUnreadBooks();
+                }
         }
-
-        // suggestRead
-        if (commandType.equals("suggestread")) {
-            // retrieve a random unread book from the library
-            controller.cGetRandomBook();
-        }
-
-        // addBooks
-        if (commandType.equals("addbooks")) {
-            // ask for file name
-            System.out.println("Enter the book file name: ");
-            String fileName = keyboard.nextLine();
-            controller.cAddBooksFromFile(fileName);
-        }
-
-        // Closes the Scanner object for the keyboard
-        keyboard.close();
+        
     }
+    
 }
