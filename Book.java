@@ -155,6 +155,28 @@ public class Book {
     }
 
     /*
+    Public method which returns a String representation of a given Book object. This String
+    has the following format: "Title: book.title; Author: book.author; Rating: book.rating;
+    Read Status: book.readStatus". Note that this method doesn't make any additional assumptions,
+    and takes no inputs, so it has no preconditions.
+
+    @return a String representing the given Book object
+     */
+    public String toString() {
+        // Constructs the string to be returned using the values of the Book's instance variables
+        String returnString = "Title: " + this.title + "; ";
+        returnString += "Author: " + this.author + "; ";
+        returnString += "Rating: " + this.rating + "; ";
+        returnString += "Read Status: ";
+        if (this.readStatus.equals(Read.READ)) {
+            returnString += "read";
+        } else {
+            returnString += "not read";
+        }
+        return returnString;
+    }
+
+    /*
     Public factory method for returning an object implementing the Comparator<Book> 
     interface. Specifically, this Comparator object will be constructed in order to
     allow for the Book objects to be sorted in terms of their title, in ascending
