@@ -67,6 +67,7 @@ public class MyLibrary {
                     endUse = true;
                     break;
                 }
+                // continually ask for commands
                 System.out.println();
                 System.out.println("Please enter one of the library commands: ");
                 commandType = keyboard.nextLine().toLowerCase();
@@ -99,13 +100,14 @@ public class MyLibrary {
 
             // suggestRead
             if (commandType.equals("suggestread")) {
-                // retrieve a random unread book from the library
-                controller.cGetRandomBook();
+                // retrieve a random unread book from the library and print
+                randBook = controller.cGetRandomBook();
+                System.out.println(randBook);
             }
 
             // addBooks
             if (commandType.equals("addbooks")) {
-                // ask for file name
+                // ask for file name and call addBooksFromFile function
                 System.out.println("Enter the book file name: ");
                 String fileName = keyboard.nextLine();
                 controller.cAddBooksFromFile(fileName);
@@ -142,7 +144,9 @@ public class MyLibrary {
         } else {
             enumSearchType = TypeSort.RATING;
         }
-    
+
+        // retrieves list of books based on search type and prints books that match 
+        // with the search
         ArrayList<Book> ourList = controller.cGetSortedCollection(enumSearchType);
         if (ourList.size() == 0) {
             System.out.println("No books match your search :(");
@@ -181,6 +185,14 @@ public class MyLibrary {
         }
     }
 
+    /*
+    Private helper method, which implements the "setToRead" functionality of the library collection.
+    This allows the user to search for a book in their library, and set that books status to "read". 
+    This method does not return anything, and takes in a Scanner and LibraryCollectionController as 
+    inputs in order to perform the desired functionality.
+
+    @pre keyboard != null && controller != null
+     */
     private void setToReadHelp(Scanner keyboard, LibraryCollectionController controller) {
         // ask user for book they want to update
         System.out.println("Enter your book title: ");
@@ -200,6 +212,16 @@ public class MyLibrary {
         controller.cSetToRead(newTitle, newAuthor);
     }
 
+    /*
+    Private helper method, which implements the "rate" functionality of the library collection.
+    This allows the user to input a book based on title and author, asks them for a number 1-5,
+    that they would like to use as a rating got the book. This method confirms that the books is already
+    in the collection before rating and that the rating is in the range 1-5. This method does not return 
+    anything, and takes in a Scanner and LibraryCollectionController as inputs in order to perform the desired
+    functionality.
+
+    @pre keyboard != null && controller != null
+     */
     private void rateHelper(Scanner keyboard, LibraryCollectionController controller) {
         // ask the user what book they want to rate
         // ask for the rating
@@ -217,7 +239,8 @@ public class MyLibrary {
             System.out.println("Enter your book author: ");
             newAuthor = keyboard.nextLine();   
         }
-    
+
+        // validate rating
         System.out.println("Enter your book rating (1-5): ");
         int rating = keyboard.nextInt();
         while (!(rating >= 1 && rating <= 5)) {
@@ -228,30 +251,48 @@ public class MyLibrary {
         controller.cUpdateBookRating(newTitle, newAuthor, rating);
     }
 
+    /*
+    Private helper method, which implements the "getBooks" functionality of the library collection.
+    This allows the user to choose a method for searching (title, author, read, unread). It then
+    gets all the books in the library related to this search type and prints them. This method does 
+    not return anything, and takes in a Scanner and LibraryCollectionController as inputs in order to 
+    perform the desired functionality.
+
+    @pre keyboard != null && controller != null
+     */
     private void getBooksHelper(Scanner keyboard, LibraryCollectionController controller) {
         // give user options and retrieve and display lists
         System.out.println("AUTHOR: All books by sorted by author");
         System.out.println("TITLE: All books by sorted by title");
         System.out.println("READ: All books that you have read");
         System.out.println("UNREAD: All books that you have not read");
+        
+        // get search type
         String getType = "";
         while (!(getType.equals("title") || getType.equals("author") || getType.equals("read") ||
                 getType.equals("unread"))) {
             System.out.print("Please enter one of the above options: ");
             getType = keyboard.nextLine().toLowerCase();
         }
+
+        // get book list based on search type
         if (getType.equals("author")) {
             System.out.println("Please enter the author: ");
             String author = keyboard.nextLine();
-            controller.cGetBooksWithAuthor(author);
+            ArrayList<Book> ourBooks = controller.cGetBooksWithAuthor(author);
         } else if (getType.equals("title")) {
             System.out.print("Please enter the title: ");
             String title = keyboard.nextLine();
-            controller.cGetBooksWithTitle(title);
+            ArrayList<Book> ourBooks = controller.cGetBooksWithTitle(title);
         } else if (getType.equals("read")) {
-            controller.cAllReadBooks();
+            ArrayList<Book> ourBooks = controller.cAllReadBooks();
         } else if (getType.equals("unread")) {
-            controller.cAllUnreadBooks();
+            ArrayList<Book> ourBooks = controller.cAllUnreadBooks();
+        }
+
+        // print books retrieved
+        for (int i == 0; i < ourBooks.length(); i++) {
+            System.out.println(ourBooks.get(i));
         }
     }
 
