@@ -21,7 +21,14 @@ mutable, which slightly complicates the maintenance of encapsulation within the
 program, we felt that having each Book directly associated with its rating and read
 status would be more accurate to how books are kept track of in most virtual library 
 collections, and that this would also help to better consolidate all book-related
-characteristics within the Book class.
+characteristics within the Book class. 
+
+It's also important to mention that our library collection is designed in such a way
+that repeat books are not allowed. Considering that the purpose of the library collection
+is to store information related to a user's books, it seems redundant to store the 
+information for a particular book more than once. Hence, we chose to enforce that the 
+books within the library collection must be unique, since we believed that this would
+better align our program with its central purpose. 
 
 Note, also, that this program contains two enumerated types: TypeSort and Read. The 
 Read enum has two possible values, READ and UNREAD, and it is used to more accurately

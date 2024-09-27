@@ -11,7 +11,6 @@ that this represents the View in the Model-View-Controller design pattern.
 
 // NEED TO DO: put everything in main() in a while loop to allow repeated interaction,
 //              and put all of the code for each task into private helper methods for improved modularity
-// NEED TO DO: replace the model currently being used with a controller
 // NEED TO DO: documentation for helper methods, once written
 
 import java.util.ArrayList;
@@ -26,7 +25,9 @@ plays a key role in maintaining the encapsulation of the other classes, since it
 uses input validation to ensure that only valid information is being fed into the
 methods of the controller. In this way, this class helps to prevent the underlying
 objects and data structures from being corrupted by improper inputs, thus further
-supporting the overall encapsulation of different elements of the program.
+supporting the overall encapsulation of different elements of the program. Also, note
+that all helper methods of the class are declared as private, which helps to further
+abstract away the underlying implementation of the library collection.
  */
 
 public class MyLibrary {
@@ -116,6 +117,16 @@ public class MyLibrary {
         keyboard.close();
     }
 
+    /*
+    Private helper method, which implements the "search" functionality of the library collection.
+    This allows the user to choose a method for searching (title, author, or rating), asks them for
+    the appropriate information according to the chosen method of sorting, and prints all of the
+    books that match this criteria to the terminal. This method does not return anything, and
+    takes in a Scanner and LibraryCollectionController as inputs in order to perform the desired
+    functionality.
+
+    @pre keyboard != null && controller != null
+     */
     private void searchHelper(Scanner keyboard, LibraryCollectionController controller) {
         String searchType = "";
         while (!(searchType.equals("title") || searchType.equals("author") || searchType.equals("book"))) {
@@ -142,6 +153,16 @@ public class MyLibrary {
         }
     }
 
+    /*
+    Private helper method which implements the "addBook" functionality of the library 
+    collection. This method asks the user for the title and author of the book that they
+    want to add to the collection, then adds the corresponding book to the collection, assuming
+    that it does not already exist in the collection. This method does not return anything, and
+    takes in a Scanner and LibraryCollectionController as inputs in order to perform the desired
+    functionality.
+
+    @pre keyboard != null && controller != null
+     */
     private void addBookHelper(Scanner keyboard, LibraryCollectionController controller) {
         // ask the user for appropriate information about the book
         // that should be added
