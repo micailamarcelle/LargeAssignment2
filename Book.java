@@ -166,7 +166,12 @@ public class Book {
         // Constructs the string to be returned using the values of the Book's instance variables
         String returnString = "Title: " + this.title + "; ";
         returnString += "Author: " + this.author + "; ";
-        returnString += "Rating: " + this.rating + "; ";
+        returnString += "Rating: ";
+        if (rating == -1) {
+            returnString += "not rated yet; ";
+        } else {
+            returnString += rating + "; ";
+        }
         returnString += "Read Status: ";
         if (this.readStatus.equals(Read.READ)) {
             returnString += "read";

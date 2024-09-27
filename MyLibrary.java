@@ -9,9 +9,8 @@ code, using the previously-constructed classes to manage user interactions. Note
 that this represents the View in the Model-View-Controller design pattern.
  */
 
-// NEED TO DO: put everything in main() in a while loop to allow repeated interaction,
-//              and put all of the code for each task into private helper methods for improved modularity
-// NEED TO DO: documentation for helper methods, once written
+// NEED TO DO: update helper methods that search for a particular book to check whether
+// the collection is empty, in order to avoid infinite loops
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -101,7 +100,7 @@ public class MyLibrary {
             // suggestRead
             if (commandType.equals("suggestread")) {
                 // retrieve a random unread book from the library and print
-                randBook = controller.cGetRandomBook();
+                Book randBook = controller.cGetRandomBook();
                 System.out.println(randBook);
             }
 
@@ -120,16 +119,15 @@ public class MyLibrary {
     }
 
     /*
-    Private helper method, which implements the "search" functionality of the library collection.
-    This allows the user to choose a method for searching (title, author, or rating), asks them for
-    the appropriate information according to the chosen method of sorting, and prints all of the
-    books that match this criteria to the terminal. This method does not return anything, and
-    takes in a Scanner and LibraryCollectionController as inputs in order to perform the desired
-    functionality.
+    Private helper method, which implements the "getBooks" functionality of the library collection.
+    This allows the user to choose a method for searching (title, author, read, unread). It then
+    gets all the books in the library related to this search type and prints them. This method does 
+    not return anything, and takes in a Scanner and LibraryCollectionController as inputs in order to 
+    perform the desired functionality.
 
     @pre keyboard != null && controller != null
      */
-    private void searchHelper(Scanner keyboard, LibraryCollectionController controller) {
+    private void getBooksHelper(Scanner keyboard, LibraryCollectionController controller) {
         String searchType = "";
         while (!(searchType.equals("title") || searchType.equals("author") || searchType.equals("book"))) {
             System.out.print("Enter search type (title, author, or book): ");
@@ -252,15 +250,16 @@ public class MyLibrary {
     }
 
     /*
-    Private helper method, which implements the "getBooks" functionality of the library collection.
-    This allows the user to choose a method for searching (title, author, read, unread). It then
-    gets all the books in the library related to this search type and prints them. This method does 
-    not return anything, and takes in a Scanner and LibraryCollectionController as inputs in order to 
-    perform the desired functionality.
+    Private helper method, which implements the "search" functionality of the library collection.
+    This allows the user to choose a method for searching (title, author, or rating), asks them for
+    the appropriate information according to the chosen method of sorting, and prints all of the
+    books that match this criteria to the terminal. This method does not return anything, and
+    takes in a Scanner and LibraryCollectionController as inputs in order to perform the desired
+    functionality.
 
     @pre keyboard != null && controller != null
      */
-    private void getBooksHelper(Scanner keyboard, LibraryCollectionController controller) {
+    private void searchHelper(Scanner keyboard, LibraryCollectionController controller) {
         // give user options and retrieve and display lists
         System.out.println("AUTHOR: All books by sorted by author");
         System.out.println("TITLE: All books by sorted by title");
@@ -276,22 +275,26 @@ public class MyLibrary {
         }
 
         // get book list based on search type
+        ArrayList<Book> ourBooks;
         if (getType.equals("author")) {
             System.out.println("Please enter the author: ");
             String author = keyboard.nextLine();
-            ArrayList<Book> ourBooks = controller.cGetBooksWithAuthor(author);
+            ourBooks = controller.cGetBooksWithAuthor(author);
         } else if (getType.equals("title")) {
             System.out.print("Please enter the title: ");
             String title = keyboard.nextLine();
-            ArrayList<Book> ourBooks = controller.cGetBooksWithTitle(title);
+            ourBooks = controller.cGetBooksWithTitle(title);
         } else if (getType.equals("read")) {
-            ArrayList<Book> ourBooks = controller.cAllReadBooks();
+            ourBooks = controller.cAllReadBooks();
         } else if (getType.equals("unread")) {
-            ArrayList<Book> ourBooks = controller.cAllUnreadBooks();
+            ourBooks = controller.cAllUnreadBooks();
+        } else {
+            System.out.println("Error: Instruction is not one of the valid options");
+            return;
         }
 
         // print books retrieved
-        for (int i == 0; i < ourBooks.length(); i++) {
+        for (int i = 0; i < ourBooks.size(); i++) {
             System.out.println(ourBooks.get(i));
         }
     }
