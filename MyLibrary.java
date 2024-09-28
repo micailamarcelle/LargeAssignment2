@@ -84,12 +84,24 @@ public class MyLibrary {
 
             // setToRead
             if (commandType.equals("settoread")) {
-                myLibrary.setToReadHelp(keyboard, controller);
+                if (controller.cIsEmpty()) {
+                    System.out.println("There are no books in your library, therefore you can not use this command.");
+                    System.out.println("Please enter another command: ");
+                    commandType = keyboard.nextLine().toLowerCase();
+                } else {
+                    myLibrary.setToReadHelp(keyboard, controller);
+                }
             }
 
             // rate
             if (commandType.equals("rate")) {
-                myLibrary.rateHelper(keyboard, controller);
+                if (controller.cIsEmpty()) {
+                    System.out.println("There are no books in your library, therefore you can not use this command.");
+                    System.out.println("Please enter another command: ");
+                    commandType = keyboard.nextLine().toLowerCase();
+                } else {
+                    myLibrary.rateHelper(keyboard, controller);
+                }
             }
 
             // getBooks
