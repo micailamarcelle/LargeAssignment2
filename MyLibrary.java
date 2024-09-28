@@ -285,8 +285,7 @@ public class MyLibrary {
         
         // get search type
         String getType = "";
-        while (!(getType.equals("title") || getType.equals("author") || getType.equals("read") ||
-                getType.equals("unread"))) {
+        while (!(getType.equals("title") || getType.equals("author") || getType.equals("rating"))) {
             System.out.print("Please enter one of the above options: ");
             getType = keyboard.nextLine().toLowerCase();
         }
@@ -301,10 +300,10 @@ public class MyLibrary {
             System.out.print("Please enter the title: ");
             String title = keyboard.nextLine();
             ourBooks = controller.cGetBooksWithTitle(title);
-        } else if (getType.equals("read")) {
-            ourBooks = controller.cAllReadBooks();
-        } else if (getType.equals("unread")) {
-            ourBooks = controller.cAllUnreadBooks();
+        } else if (getType.equals("rating")) {
+            System.out.print("Please enter the rating: ");
+            String rating = keyboard.nextInt();
+            ourBooks = controller.cGetBooksWithRating(rating);
         } else {
             System.out.println("Error: Instruction is not one of the valid options");
             return;
