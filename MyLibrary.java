@@ -279,9 +279,9 @@ public class MyLibrary {
      */
     private void searchHelper(Scanner keyboard, LibraryCollectionController controller) {
         // give user options and retrieve and display lists
-        System.out.println("AUTHOR: All books by sorted by author");
-        System.out.println("TITLE: All books by sorted by title");
-        System.out.println("RATING: All books that you have read");
+        System.out.println("AUTHOR: Find books by a particular author");
+        System.out.println("TITLE: Find books with a particular title");
+        System.out.println("RATING: Find books with a particular rating");
         
         // get search type
         String getType = "";
