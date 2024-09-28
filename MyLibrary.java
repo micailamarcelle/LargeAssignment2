@@ -61,7 +61,7 @@ public class MyLibrary {
             String commandType = "";
             while (!(commandType.equals("search") || commandType.equals("addbook") || commandType.equals("settoread")
                     || commandType.equals("rate") || commandType.equals("getbooks") || commandType.equals("suggestread")
-                    || commandType.equals("addbooks") || commandType.equals("stop"))) {
+                    || commandType.equals("addbooks"))) {
                 if (commandType.equals("stop")) {
                     endUse = true;
                     break;
@@ -111,9 +111,15 @@ public class MyLibrary {
 
             // suggestRead
             if (commandType.equals("suggestread")) {
+                if (controller.cIsEmpty()) {
+                    System.out.println("There are no books in your library, therefore you can not use this command.");
+                    System.out.println("Please enter another command: ");
+                    commandType = keyboard.nextLine().toLowerCase();
+                } else {
                 // retrieve a random unread book from the library and print
-                Book randBook = controller.cGetRandomBook();
-                System.out.println(randBook);
+                    Book randBook = controller.cGetRandomBook();
+                    System.out.println(randBook);
+                }
             }
 
             // addBooks
