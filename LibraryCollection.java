@@ -405,21 +405,29 @@ public class LibraryCollection {
     Public method which returns a random Book object corresponding to a book in the library
     collection. In order to maintain encapsulation, this Book object is actually a copy of
     one of the Books in the underlying ArrayList<Book> of the class. This method also assumes
-    that at least one Book exists within the library collection.
+    that at least one unread Book exists within the library collection. Note also that this method 
+    specifically returns a books that has not been read. 
 
     @pre !isEmpty()
-    @return Book object which represents a copy of a random book in the library collection
+    @return Book object which represents a copy of a random unread book in the library collection, or null
+        if there are no unread books. 
      */
     public Book getRandomBook() {
-        // First, we get a random index within the underlying ArrayList, assuming that this 
-        // ArrayList is not empty
-        Random random = new Random();
-        int randIndex = random.nextInt(bookList.size());
+        // First, we get a list of all of the unread books in the library
+        ArrayList<Book> unread = allUnreadBooks();
 
-        // We then copy the Book at this index and return the copy
-        Book randBook = bookList.get(randIndex);
-        Book copy = new Book(randBook.getTitle(), randBook.getAuthor(), randBook.getRating(), randBook.getReadStatus());
-        return copy;
+        // If there is nothing in the array, then we return null
+        if (unread.size() == 0) {
+            return null;
+        }
+
+        // Otherwise, we get a random index within this ArrayList of unread books
+        Random random = new Random();
+        int randIndex = random.nextInt(unread.size());
+
+        // We then return the copy of this random book
+        Book randBook = unread.get(randIndex);
+        return randBook;
     }
 
     /*
@@ -439,7 +447,7 @@ public class LibraryCollection {
         try {
             scanner = new Scanner(bookFile);
         } catch (FileNotFoundException e) {
-            System.out.println("Error: given file not found\n");   
+            System.out.println("Error: given file not found");   
             return;
         }
 

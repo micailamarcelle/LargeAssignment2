@@ -85,7 +85,7 @@ public class MyLibrary {
             // setToRead
             if (commandType.equals("settoread")) {
                 if (controller.cIsEmpty()) {
-                    System.out.println("There are no books in your library, therefore you can not use this command.");
+                    System.out.println("There are no books in your library, therefore you can not use this command.\n");
                     System.out.println("Please enter another command: ");
                     commandType = keyboard.nextLine().toLowerCase();
                 } else {
@@ -96,7 +96,7 @@ public class MyLibrary {
             // rate
             if (commandType.equals("rate")) {
                 if (controller.cIsEmpty()) {
-                    System.out.println("There are no books in your library, therefore you can not use this command.");
+                    System.out.println("There are no books in your library, therefore you can not use this command.\n");
                     System.out.println("Please enter another command: ");
                     commandType = keyboard.nextLine().toLowerCase();
                 } else {
@@ -112,13 +112,17 @@ public class MyLibrary {
             // suggestRead
             if (commandType.equals("suggestread")) {
                 if (controller.cIsEmpty()) {
-                    System.out.println("There are no books in your library, therefore you can not use this command.");
+                    System.out.println("There are no books in your library, therefore you can not use this command.\n");
                     System.out.println("Please enter another command: ");
                     commandType = keyboard.nextLine().toLowerCase();
                 } else {
                 // retrieve a random unread book from the library and print
                     Book randBook = controller.cGetRandomBook();
-                    System.out.println(randBook);
+                    if (randBook == null) {
+                        System.out.println("No unread books are present in your library to suggest.");
+                    } else {
+                        System.out.println(randBook);
+                    }
                 }
             }
 
@@ -147,30 +151,36 @@ public class MyLibrary {
      */
     private void getBooksHelper(Scanner keyboard, LibraryCollectionController controller) {
         String searchType = "";
-        while (!(searchType.equals("title") || searchType.equals("author") || searchType.equals("read") || searchType.equals("unread"))) {
-            System.out.print("Retrieve a list of books sorted by title, author, read, or unread. Enter one of the above: ");
+        System.out.println("Retrieve a list of all books sorted by title, author, or rating, ");
+        System.out.println("or a list of all read or unread books.");
+        while (!(searchType.equals("title") || searchType.equals("author") || searchType.equals("rating") || searchType.equals("read") || searchType.equals("unread"))) {
+            System.out.print("Enter one of 'title', 'author', 'rating', 'read', or 'unread': ");
             searchType = keyboard.nextLine().toLowerCase();
         }
         // Converts to an enumerated type for greater code clarity
         TypeSort enumSearchType;
+        ArrayList<Book> ourList;
         if (searchType.equals("title")) {
             enumSearchType = TypeSort.TITLE;
-             ArrayList<Book> ourList = controller.cGetSortedCollection(enumSearchType);
+            ourList = controller.cGetSortedCollection(enumSearchType);
         } else if (searchType.equals("author")) {
             enumSearchType = TypeSort.AUTHOR;
-            ArrayList<Book> ourList = controller.cGetSortedCollection(enumSearchType);
+            ourList = controller.cGetSortedCollection(enumSearchType);
+        } else if (searchType.equals("rating")) {
+            enumSearchType = TypeSort.RATING;
+            ourList = controller.cGetSortedCollection(enumSearchType);
         } else {
             if (searchType.equals("read")) {
-                ArrayList<Book> ourList = controller.cAllReadBooks();
+                ourList = controller.cAllReadBooks();
             } else {
-                ArrayList<Book> ourList = controller.cAllUnreadBooks();
+                ourList = controller.cAllUnreadBooks();
             }
         }
 
         // retrieves list of books based on search type and prints books that match 
         // with the search
         if (ourList.size() == 0) {
-            System.out.println("No books match your search :(");
+            System.out.println("No books available to get for this task :(");
         } else {
             for (int i = 0; i < ourList.size(); i++) {
                 System.out.println(ourList.get(i));
@@ -222,13 +232,9 @@ public class MyLibrary {
         System.out.println("Enter your book author: ");
         String newAuthor = keyboard.nextLine();
 
-        while (!(controller.cAlreadyInCollection(newTitle, newAuthor))) {
+        if (!(controller.cAlreadyInCollection(newTitle, newAuthor))) {
             System.out.println("Sorry, that book is not in your collection.");
-            System.out.println("Enter your book title: ");
-            newTitle = keyboard.nextLine();
-    
-            System.out.println("Enter your book author: ");
-            newAuthor = keyboard.nextLine();   
+            return;
         }
         controller.cSetToRead(newTitle, newAuthor);
     }
@@ -252,13 +258,9 @@ public class MyLibrary {
         System.out.println("Enter your book author: ");
         String newAuthor = keyboard.nextLine();
 
-        while (!(controller.cAlreadyInCollection(newTitle, newAuthor))) {
+        if (!(controller.cAlreadyInCollection(newTitle, newAuthor))) {
             System.out.println("Sorry, that book is not in your collection.");
-            System.out.println("Enter your book title: ");
-            newTitle = keyboard.nextLine();
-    
-            System.out.println("Enter your book author: ");
-            newAuthor = keyboard.nextLine();   
+            return;
         }
 
         // validate rating
@@ -269,6 +271,7 @@ public class MyLibrary {
             rating = keyboard.nextInt();
         }
     
+        keyboard.nextLine();
         controller.cUpdateBookRating(newTitle, newAuthor, rating);
     }
 
@@ -298,7 +301,7 @@ public class MyLibrary {
         // get book list based on search type
         ArrayList<Book> ourBooks;
         if (getType.equals("author")) {
-            System.out.println("Please enter the author: ");
+            System.out.print("Please enter the author: ");
             String author = keyboard.nextLine();
             ourBooks = controller.cGetBooksWithAuthor(author);
         } else if (getType.equals("title")) {
@@ -306,8 +309,13 @@ public class MyLibrary {
             String title = keyboard.nextLine();
             ourBooks = controller.cGetBooksWithTitle(title);
         } else if (getType.equals("rating")) {
-            System.out.print("Please enter the rating: ");
+            System.out.print("Please enter the rating (1-5): ");
             int rating = keyboard.nextInt();
+            keyboard.nextLine();
+            while(! (rating >= 1 && rating <= 5)) {
+                System.out.print("Please enter the rating (1-5): ");
+                rating = keyboard.nextInt();
+            }
             ourBooks = controller.cGetBooksWithRating(rating);
         } else {
             System.out.println("Error: Instruction is not one of the valid options");

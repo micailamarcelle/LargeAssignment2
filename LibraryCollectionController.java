@@ -168,11 +168,12 @@ public class LibraryCollectionController {
     }
 
     /*
-    Public method for obtaining a random book from the library collection. Note that
+    Public method for obtaining a random unread book from the library collection. Note that
     this method assumes that the collection contains at least one book
 
     @pre !model.isEmpty()
-    @return Book object representing a random book from the collection
+    @return Book object representing a random unread book from the collection, or null if there
+        are no unread books.
      */
     public Book cGetRandomBook() {
         return model.getRandomBook();

@@ -236,7 +236,7 @@ public class Book {
     public static Comparator<Book> makeComparatorRating() {
         return new Comparator<Book>() {
             public int compare(Book book1, Book book2) {
-                return book1.rating - book2.rating;
+                return Integer.compare(book1.rating, book2.rating);
             }
         };
     }
