@@ -147,23 +147,28 @@ public class MyLibrary {
      */
     private void getBooksHelper(Scanner keyboard, LibraryCollectionController controller) {
         String searchType = "";
-        while (!(searchType.equals("title") || searchType.equals("author") || searchType.equals("book"))) {
-            System.out.print("Enter search type (title, author, or book): ");
+        while (!(searchType.equals("title") || searchType.equals("author") || searchType.equals("read") || searchType.equals("unread"))) {
+            System.out.print("Retrieve a list of books sorted by title, author, read, or unread. Enter one of the above: ");
             searchType = keyboard.nextLine().toLowerCase();
         }
         // Converts to an enumerated type for greater code clarity
         TypeSort enumSearchType;
         if (searchType.equals("title")) {
             enumSearchType = TypeSort.TITLE;
+             ArrayList<Book> ourList = controller.cGetSortedCollection(enumSearchType);
         } else if (searchType.equals("author")) {
             enumSearchType = TypeSort.AUTHOR;
+            ArrayList<Book> ourList = controller.cGetSortedCollection(enumSearchType);
         } else {
-            enumSearchType = TypeSort.RATING;
+            if (searchType.equals("read")) {
+                ArrayList<Book> ourList = controller.cAllReadBooks();
+            } else {
+                ArrayList<Book> ourList = controller.cAllUnreadBooks();
+            }
         }
 
         // retrieves list of books based on search type and prints books that match 
         // with the search
-        ArrayList<Book> ourList = controller.cGetSortedCollection(enumSearchType);
         if (ourList.size() == 0) {
             System.out.println("No books match your search :(");
         } else {
@@ -310,8 +315,13 @@ public class MyLibrary {
         }
 
         // print books retrieved
-        for (int i = 0; i < ourBooks.size(); i++) {
-            System.out.println(ourBooks.get(i));
+        if (ourBooks.size() == 0) {
+            System.out.println("No items match your search.");
+            return;
+        } else {
+            for (int i = 0; i < ourBooks.size(); i++) {
+                System.out.println(ourBooks.get(i));
+            }
         }
     }
 
