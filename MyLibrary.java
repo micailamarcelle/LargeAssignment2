@@ -302,7 +302,7 @@ public class MyLibrary {
             ourBooks = controller.cGetBooksWithTitle(title);
         } else if (getType.equals("rating")) {
             System.out.print("Please enter the rating: ");
-            String rating = keyboard.nextInt();
+            int rating = keyboard.nextInt();
             ourBooks = controller.cGetBooksWithRating(rating);
         } else {
             System.out.println("Error: Instruction is not one of the valid options");
