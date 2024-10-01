@@ -33,9 +33,9 @@ better align our program with its central purpose.
 Note, also, that this program contains two enumerated types: TypeSort and Read. The 
 Read enum has two possible values, READ and UNREAD, and it is used to more accurately
 model the read status of individual Book objects. On the other hand, the TypeSort enum
-has three possible values, TITLE, AUTHOR, and RATING, and it is used to remove ambiguity
+also has two possible values, TITLE, and AUTHOR, and it is used to remove ambiguity
 when telling the model how to sort the library collection, considering that it limits the
-options for sorting to only the three types of sorting we want to do. While we considered
+options for sorting to only the two types that are available to the user. While we considered
 constructing a third enum to represent the possible ratings, we felt that doing so would
 not differ significantly from using an integer, especially when one considers that to 
 switch from user input to the enum, we would have to check that the given input is in the
@@ -54,13 +54,16 @@ utilize the Collections class to sort the underlying ArrayList<Book> of the mode
 particular, we utilize the Collections.sort() method, passing in the underlying ArrayList 
 of Books and a Comparator<Book> object corresponding to the type of sorting that we 
 want to do. This then allows for us to efficiently sort the list of books currently in 
-the library collection according to any of the primary characteristics of the books. 
+the library collection according to any of the primary (sortable) characteristics of the books. 
+Note that, with the use of Comparator<Book>, we observe the application of an interfact to
+this program.
 
 In addition to the Collections and ArrayList classes, the LibraryCollection class also 
 makes use of the Random and Scanner classes, which are also found in the java.util 
-package. The Random class is used when selecting a random book from the collection, with
-the nextInt() method in particular being used to generate a random index within the underlying
-ArrayList<Book> of the library collection. On the other hand, the Scanner class is used
+package. The Random class is used when selecting a random unread book from the collection, with
+the nextInt() method in particular being used to generate a random index within an ArrayList<Book>
+of unread books in the library collection. On the other hand, the Scanner class is used
 in order to read through a file containing the titles and authors of books to be added
-to the collection. With this, the central design choices defining our program are made 
+to the collection. It's also used within the View class in order to repeatedly obtain input
+from the user as the program runs. With this, the central design choices defining our program are made 
 clear. 

@@ -57,7 +57,9 @@ public class LibraryCollection {
     determine what type of sorting to utilize. To prevent issues with encapsulation,
     the ArrayList<Book> that is returned by this method is a copy of the underlying
     ArrayList<Book> for the class, with each Book object within the ArrayList being
-    copied as well to prevent any escaping references. 
+    copied as well to prevent any escaping references. Note that, based on the spec, 
+    the only possible sorting options are by title and author, according to the 
+    functionality of the getBooks command. 
 
     @pre howSort != null
     @return ArrayList<Book> of the books currently in the collection, sorted according to howSort
@@ -69,8 +71,6 @@ public class LibraryCollection {
             Collections.sort(bookList, Book.makeComparatorTitle());
         } else if (howSort.equals(TypeSort.AUTHOR)) {
             Collections.sort(bookList, Book.makeComparatorAuthor());
-        } else {
-            Collections.sort(bookList, Book.makeComparatorRating());
         }
 
         // We then copy all of the books from the sorted ArrayList into a new ArrayList,

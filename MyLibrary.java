@@ -9,9 +9,6 @@ code, using the previously-constructed classes to manage user interactions. Note
 that this represents the View in the Model-View-Controller design pattern.
  */
 
-// NEED TO DO: update helper methods that search for a particular book to check whether
-// the collection is empty, in order to avoid infinite loops
-
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -86,8 +83,6 @@ public class MyLibrary {
             if (commandType.equals("settoread")) {
                 if (controller.cIsEmpty()) {
                     System.out.println("There are no books in your library, therefore you can not use this command.\n");
-                    System.out.println("Please enter another command: ");
-                    commandType = keyboard.nextLine().toLowerCase();
                 } else {
                     myLibrary.setToReadHelp(keyboard, controller);
                 }
@@ -97,8 +92,6 @@ public class MyLibrary {
             if (commandType.equals("rate")) {
                 if (controller.cIsEmpty()) {
                     System.out.println("There are no books in your library, therefore you can not use this command.\n");
-                    System.out.println("Please enter another command: ");
-                    commandType = keyboard.nextLine().toLowerCase();
                 } else {
                     myLibrary.rateHelper(keyboard, controller);
                 }
@@ -113,8 +106,6 @@ public class MyLibrary {
             if (commandType.equals("suggestread")) {
                 if (controller.cIsEmpty()) {
                     System.out.println("There are no books in your library, therefore you can not use this command.\n");
-                    System.out.println("Please enter another command: ");
-                    commandType = keyboard.nextLine().toLowerCase();
                 } else {
                 // retrieve a random unread book from the library and print
                     Book randBook = controller.cGetRandomBook();
@@ -151,10 +142,10 @@ public class MyLibrary {
      */
     private void getBooksHelper(Scanner keyboard, LibraryCollectionController controller) {
         String searchType = "";
-        System.out.println("Retrieve a list of all books sorted by title, author, or rating, ");
+        System.out.println("Retrieve a list of all books sorted by title or author, ");
         System.out.println("or a list of all read or unread books.");
         while (!(searchType.equals("title") || searchType.equals("author") || searchType.equals("rating") || searchType.equals("read") || searchType.equals("unread"))) {
-            System.out.print("Enter one of 'title', 'author', 'rating', 'read', or 'unread': ");
+            System.out.print("Enter one of 'title', 'author', 'read', or 'unread': ");
             searchType = keyboard.nextLine().toLowerCase();
         }
         // Converts to an enumerated type for greater code clarity
@@ -165,9 +156,6 @@ public class MyLibrary {
             ourList = controller.cGetSortedCollection(enumSearchType);
         } else if (searchType.equals("author")) {
             enumSearchType = TypeSort.AUTHOR;
-            ourList = controller.cGetSortedCollection(enumSearchType);
-        } else if (searchType.equals("rating")) {
-            enumSearchType = TypeSort.RATING;
             ourList = controller.cGetSortedCollection(enumSearchType);
         } else {
             if (searchType.equals("read")) {
@@ -265,10 +253,21 @@ public class MyLibrary {
 
         // validate rating
         System.out.println("Enter your book rating (1-5): ");
-        int rating = keyboard.nextInt();
+        int rating;
+        try {
+            rating = keyboard.nextInt();
+        } catch (Exception e) {
+            keyboard.nextLine();
+            rating = -1;
+        }
         while (!(rating >= 1 && rating <= 5)) {
             System.out.println("Sorry, that's not between 1 and 5. Enter your book rating (1-5): ");
-            rating = keyboard.nextInt();
+            try {
+                rating = keyboard.nextInt();
+            } catch (Exception e) {
+                keyboard.nextLine();
+                rating = -1;
+            }
         }
     
         keyboard.nextLine();
@@ -308,14 +307,26 @@ public class MyLibrary {
             System.out.print("Please enter the title: ");
             String title = keyboard.nextLine();
             ourBooks = controller.cGetBooksWithTitle(title);
-        } else if (getType.equals("rating")) {
+        } else if (getType.equals("rating")) { 
+
             System.out.print("Please enter the rating (1-5): ");
-            int rating = keyboard.nextInt();
-            keyboard.nextLine();
+            int rating;
+            try {
+                rating = keyboard.nextInt();
+            } catch (Exception e) {
+                keyboard.nextLine();
+                rating = -1;
+            }
             while(! (rating >= 1 && rating <= 5)) {
                 System.out.print("Please enter the rating (1-5): ");
-                rating = keyboard.nextInt();
+                try {
+                    rating = keyboard.nextInt();
+                } catch (Exception e) {
+                    keyboard.nextLine();
+                    rating = -1;
+                }
             }
+            keyboard.nextLine();
             ourBooks = controller.cGetBooksWithRating(rating);
         } else {
             System.out.println("Error: Instruction is not one of the valid options");
