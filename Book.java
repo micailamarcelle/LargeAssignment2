@@ -43,8 +43,8 @@ public class Book {
     @pre title != null && author != null
      */
     public Book(String title, String author) {
-        this.title = title;
-        this.author = author;
+        this.title = title.toUpperCase();
+        this.author = author.toUpperCase();
         this.rating = -1;
         this.readStatus = Read.UNREAD;
     }
@@ -58,8 +58,8 @@ public class Book {
     @pre title != null && author != null && rating >= 1 && rating <= 5 && readStatus != null
      */
     public Book(String title, String author, int rating, Read readStatus) {
-        this.title = title;
-        this.author = author;
+        this.title = title.toUpperCase();
+        this.author = author.toUpperCase();
         this.rating = rating;
         this.readStatus = readStatus;
     }
@@ -196,7 +196,7 @@ public class Book {
     public static Comparator<Book> makeComparatorTitle() {
         return new Comparator<Book>() {
             public int compare(Book book1, Book book2) {
-                return book1.title.compareTo(book2.title);
+                return book1.title.toLowerCase().compareTo(book2.title.toLowerCase());
             }
         };
     }
@@ -216,7 +216,7 @@ public class Book {
     public static Comparator<Book> makeComparatorAuthor() {
         return new Comparator<Book>() {
             public int compare(Book book1, Book book2) {
-                return book1.author.compareTo(book2.author);
+                return book1.author.toLowerCase().compareTo(book2.author.toLowerCase());
             }
         };
     }
