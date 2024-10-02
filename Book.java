@@ -6,7 +6,10 @@ Purpose: This class implements the Book object, which will be used to model the
 books within the library collection. Each Book object will have an associated title,
 author, rating, and read status, and the class contains several static factory methods for
 creating Comparator<Book> objects, which will be used to sort Book objects according
-to differing characteristics. 
+to differing characteristics. This class also defines what it means for two Book objects 
+to be equal, and provides a copy constructor for easily creating copies of Book objects,
+considering that these Book objects were made mutable in order to better consolidate
+all book-related information into a single class.
  */
 
 import java.util.Comparator;
@@ -14,20 +17,21 @@ import java.util.Comparator;
 /*
 When it comes to maintaining encapsulation, first note that all of the instance variables
 of this class are marked as private, which prevents any direct manipulation. These instance
-variables are also all immutable objects or primitive types, which means that whenver a user
+variables are also all immutable objects or primitive types, which means that whenever a user
 passes a value for one of these variables into a constructor or setter, they do not maintain
 an external reference that can be used to directly manipulate the internal instance variables.
+In other words, there can be no harmful escaping references for these internal data values. 
 However, it is important to note that this class contains setters for the rating and readStatus
 instance variables, which makes the class mutable. Each time a Book is returned within the model,
-though, it's a copy of a Book object within the underlying model to prevent any escaping 
-references, and design by contract is used to help prevent misuse of the setter method for the
-rating instance variable, with input validation being used to ensure that no improper values are
-placed within the Book object. 
+though, it's a copy of a Book object within the underlying data structure to prevent any escaping Book
+references. Also, design by contract is used to help prevent misuse of the setter methods for the
+instance variables (particularly rating), with input validation in the view being used to ensure
+that no improper values are placed within any Book objects. 
  */
 
 public class Book {
     // Declares the private instance variables, which include a String for the title,
-    // a String for the author, and int for the rating (must be 1 through 5), and 
+    // a String for the author, and int for the rating (must be 1 through 5 once actually set), and 
     // a Read enumerated type object for the read status of the book.
     private String title;
     private String author;
@@ -38,7 +42,9 @@ public class Book {
     Public constructor for the Book class, which takes in a title and author, then
     initializes a new Book object. Note that the rating for this Book object is
     initialized to -1, to show that it has not yet been rated, and the read status
-    is initializes to UNREAD
+    is initializes to UNREAD. Also, note that both the title and author are set to 
+    be in all uppercase, in order to improve the view of the library collection and 
+    to prevent any bugs with the underlying sorting/searching algorithms. 
 
     @pre title != null && author != null
      */
@@ -53,7 +59,9 @@ public class Book {
     Secondary public constructor for the Book class, which effectively acts as a 
     copy constructor. It takes in a title, author, rating, and read status, then
     constructs a new Book object with all of the given values as the values for 
-    its instance variables.
+    its instance variables. Again, note that the title and author are set to be in
+    all uppercase, all to improve the view of the library collection and to minimize
+    any potential bugs with searching for/sorting Book objects. 
 
     @pre title != null && author != null && rating >= 1 && rating <= 5 && readStatus != null
      */
@@ -71,7 +79,8 @@ public class Book {
     characteristics. Such a method will be utilized in the LibraryCollection class in
     order to quickly determine whether a book with a particular author and title is 
     already in the collection.  Note that this method is not case sensitive in terms
-    of the title and author instance variables.
+    of the title and author instance variables, with everything being converted to 
+    lowercase for simplicity. 
 
     @pre other != null 
     @return true if the Book is equal to other, false otherwise
@@ -95,7 +104,8 @@ public class Book {
     /*
     Public method for updating the read status of a book to READ. If the book has 
     already been set to READ, then no changes to the Book object are made. This
-    method takes no inputs and has no outputs, and thus does not have any preconditions
+    method takes no inputs and has no outputs, and thus does not have any preconditions,
+    especially considering that it makes no additional assumptions. 
      */
     public void setRead() {
         readStatus = Read.READ;
@@ -106,7 +116,8 @@ public class Book {
     which represents the updated rating of the book, and it is assumed that this integer
     is between 1 and 5 (inclusive), since this is the valid range of possible ratings.
     This condition is ensured to be true within the code that obtains the new rating
-    from the user.
+    from the user within the View element of the MVC. This method does not return
+    anything, and sets the rating of the book to be the new given rating. 
 
     @pre newRating >= 1 && newRating <= 5
      */

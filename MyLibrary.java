@@ -5,7 +5,7 @@ Course: CSC 335
 Purpose: Implements the main() method for the library collection, so this is the
 file that will be run in order to actually run the library collection program as
 a whole. More specifically, this code will handle the user-facing front-end of the
-code, using the previously-constructed classes to manage user interactions. Note
+code, using the rest of the classes in the program to manage user interactions. Note
 that this represents the View in the Model-View-Controller design pattern.
  */
 
@@ -16,14 +16,15 @@ import java.util.Scanner;
 When it comes to maintaining encapsulation, considering that this class posesses no
 instance variables (since it only functions as the view, and is the file that is 
 run to run the overall program), there aren't any opportunities for this class 
-itself to produce any escaping references for internal data. However, this class
+itself to produce any escaping references for its own internal data. However, this class
 plays a key role in maintaining the encapsulation of the other classes, since it
 uses input validation to ensure that only valid information is being fed into the
-methods of the controller. In this way, this class helps to prevent the underlying
+methods of the controller (and model). In this way, this class helps to prevent the underlying
 objects and data structures from being corrupted by improper inputs, thus further
 supporting the overall encapsulation of different elements of the program. Also, note
-that all helper methods of the class are declared as private, which helps to further
-abstract away the underlying implementation of the library collection.
+that all helper methods of this class are declared as private, which helps to further
+abstract away and encapsulate the underlying implementation of the library collection,
+since it prevents these methods from being accessed outside of the class.
  */
 
 public class MyLibrary {
@@ -103,6 +104,8 @@ public class MyLibrary {
             }
 
             // suggestRead
+            // Note that if there are no books in the library, or if there are no unread books in the library,
+            // then an error message is printed, and no unread book is suggested. 
             if (commandType.equals("suggestread")) {
                 if (controller.cIsEmpty()) {
                     System.out.println("There are no books in your library, therefore you can not use this command.\n");
@@ -118,6 +121,9 @@ public class MyLibrary {
             }
 
             // addBooks
+            // Note that if the given file name is not valid, then an error message is printed to
+            // the terminal, and no books are added to the collection. It is also assumed that if the
+            // given file name is valid, then it has the specified format. 
             if (commandType.equals("addbooks")) {
                 // ask for file name and call addBooksFromFile function
                 System.out.println("Enter the book file name: ");
@@ -133,10 +139,11 @@ public class MyLibrary {
 
     /*
     Private helper method, which implements the "getBooks" functionality of the library collection.
-    This allows the user to choose a method for searching (title, author, read, unread). It then
-    gets all the books in the library related to this search type and prints them. This method does 
-    not return anything, and takes in a Scanner and LibraryCollectionController as inputs in order to 
-    perform the desired functionality.
+    This allows the user to choose a method for sorting (title, author, read, unread), and then
+    gets either all books in the library sorted by title/author, or all read/unread books, which will 
+    be sorted by title. This method does not return anything, and takes in a Scanner and 
+    LibraryCollectionController as inputs in order to perform the desired functionality. The books
+    that are obtained are printed to the terminal.
 
     @pre keyboard != null && controller != null
      */
@@ -182,7 +189,8 @@ public class MyLibrary {
     want to add to the collection, then adds the corresponding book to the collection, assuming
     that it does not already exist in the collection. This method does not return anything, and
     takes in a Scanner and LibraryCollectionController as inputs in order to perform the desired
-    functionality.
+    functionality. Note that this method supports the idea that all books in the library collection
+    should be unique!
 
     @pre keyboard != null && controller != null
      */
@@ -208,7 +216,9 @@ public class MyLibrary {
     Private helper method, which implements the "setToRead" functionality of the library collection.
     This allows the user to search for a book in their library, and set that books status to "read". 
     This method does not return anything, and takes in a Scanner and LibraryCollectionController as 
-    inputs in order to perform the desired functionality.
+    inputs in order to perform the desired functionality. Note that if the book has already been 
+    read, then its read status is unchanged, and that if the book is not already in the collection,
+    an error message is printed. 
 
     @pre keyboard != null && controller != null
      */
@@ -231,9 +241,11 @@ public class MyLibrary {
     Private helper method, which implements the "rate" functionality of the library collection.
     This allows the user to input a book based on title and author, asks them for a number 1-5,
     that they would like to use as a rating got the book. This method confirms that the books is already
-    in the collection before rating and that the rating is in the range 1-5. This method does not return 
+    in the collection before rating and ensures that the rating is in the range 1-5. This method does not return 
     anything, and takes in a Scanner and LibraryCollectionController as inputs in order to perform the desired
-    functionality.
+    functionality. Note that if the given book is not already in the library, then an error message
+    is printed, and nothing else is done. If the rating is not in the valid range, then the method
+    continues asking until it gets a rating that is in the valid range. 
 
     @pre keyboard != null && controller != null
      */
@@ -280,7 +292,8 @@ public class MyLibrary {
     the appropriate information according to the chosen method of sorting, and prints all of the
     books that match this criteria to the terminal. This method does not return anything, and
     takes in a Scanner and LibraryCollectionController as inputs in order to perform the desired
-    functionality.
+    functionality. Input validation is used to ensure that the user selects one of these options,
+    and that they pass in a valid integer rating. 
 
     @pre keyboard != null && controller != null
      */
