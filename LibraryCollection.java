@@ -4,11 +4,13 @@ Authors: Micaila Marcelle (micailamarcelle) and Elise Bushra (ebushra)
 Course: CSC 335
 Purpose: This class is designed to organize the Book objects that will
 be stored within the library collection, and will provide methods allowing
-for the sorting of books according to different characteristics, searching
+for sorting all of the books according to different characteristics, searching
 for books with particular characteristics, and updating the books currently
 in the collection. Note that the underlying data structure for the collection
 is an ArrayList of Book objects, since using such a data structure allows for 
-new books to be added to the collection easily and efficiently. Note that this
+new books to be added to the collection easily and efficiently, and allows the
+class as a whole to better model a collection of unique books, although there
+are a few trade-offs with search efficiency, which are noted below. Note that this
 class represents the Model element of the Model-View-Controller design pattern.
  */
 
@@ -26,19 +28,19 @@ data structure for the library collection is an ArrayList of Book objects. To
 prevent any escaping references from occurring, each time a Book object is returned
 by a method (either directly or within an ArrayList of Books), the actual thing
 being returned is a copy of the Book within the underlying ArrayList, rather than
-the Book object itself. Furthermore, anytime the method returns an ArrayList 
+the mutable Book object itself. Furthermore, anytime the method returns an ArrayList 
 containing all of the books within the collection, the list being returned is 
 a copy of the underlying ArrayList rather than this underlying ArrayList itself,
 with all of the Book objects within being copied as well. With this, the class is
 able to effectively maintain a great degree of encapsulation. Additional protection
 is then provided via input validation in the MyLibrary class, which prevents any
-unintended misuse of the methods within this class. Note also that the sole instance
-variable is declared as private to further maintain encapsulation.
+improper data from corrupting the Books in the collection. Note also that the sole 
+instance variable is declared as private to further maintain encapsulation.
  */
 
 public class LibraryCollection {
     // Declares the sole private instance variable of the LibraryCollection class,
-    // which is an ArrayList of the 
+    // which is an ArrayList of the Book objects currently within the collection
     private ArrayList<Book> bookList;
 
     /*
@@ -58,8 +60,14 @@ public class LibraryCollection {
     the ArrayList<Book> that is returned by this method is a copy of the underlying
     ArrayList<Book> for the class, with each Book object within the ArrayList being
     copied as well to prevent any escaping references. Note that, based on the spec, 
-    the only possible sorting options are by title and author, according to the 
-    functionality of the getBooks command. 
+    the only client-available sorting options are by title and author, according to the 
+    functionality of the getBooks command. The use of the TypeSort enum then removes
+    any potential ambiguity involved in determining how to sort, and simplifies the 
+    process of ensuring that the type of sorting being passed into this method is a 
+    valid one. If there are no books currently in the collection, an empty ArrayList<Book>
+    is returned. Also, note that the Collections.sort() method is utilized in order
+    to perform the actual sorting, with the appropriate Comparator<Book> being passed
+    in according to the given type of sorting. 
 
     @pre howSort != null
     @return ArrayList<Book> of the books currently in the collection, sorted according to howSort
@@ -90,7 +98,12 @@ public class LibraryCollection {
     then an empty ArrayList<Book> will simply be returned. Also, to maintain encapsulation,
     the ArrayList<Book> that is returned is not connected in any way to the underlying ArrayList
     of the class, and all Book objects in the returned ArrayList are copies of those in the 
-    actual ArrayList.
+    actual ArrayList. In terms of the sorting algorithm used, this method first sorts the ArrayList
+    according to author, then uses linear search to find the given author and all books associated
+    with them. While this is slightly less efficient than using hashing, performing searching
+    in this way allows for more rapid sorting, without too bad of a search runtime in the average
+    case, and allows for the Book class to contain all book-related information. This method is 
+    not case-sensitive. 
 
     @pre author != null
     @return ArrayList<Book> of Book objects with the given author
@@ -102,17 +115,18 @@ public class LibraryCollection {
         // Initializes the ArrayList to be returned
         ArrayList<Book> authorList = new ArrayList<Book>();
 
-        // Converts the given author name to lowercase to avoid case sensitivity
-        author = author.toLowerCase();
+        // Converts the given author name to uppercase to avoid case sensitivity, knowing that
+        // the Book class ensures that all internal author data is in all uppercase
+        author = author.toUpperCase();
 
         // We then iterate until we find a book with the given author
         int i = 0;
         while (i < bookList.size()) {
             Book curBook = bookList.get(i);
-            if (curBook.getAuthor().toLowerCase().equals(author)) {
+            if (curBook.getAuthor().equals(author)) {
                 // If we find a book with the given author, then we add all books with this
                 // author into the return list
-                while (i < bookList.size() && curBook.getAuthor().toLowerCase().equals(author)) {
+                while (i < bookList.size() && curBook.getAuthor().equals(author)) {
                     // Adds the copy to the ArrayList to be returned
                     Book copy = new Book(curBook.getTitle(), curBook.getAuthor(), curBook.getRating(), curBook.getReadStatus());
                     authorList.add(copy);
@@ -144,7 +158,13 @@ public class LibraryCollection {
     title, then an empty ArrayList is simply returned. Also, to maintain encapsulation,
     the returned ArrayList<Book> has no connection to the underlying ArrayList<Book> of
     the class, and all Book objects within the returned ArrayList are copies of those in
-    the actual ArrayList of the class. 
+    the actual ArrayList of the class. In terms of how this is actually done, this method
+    first sorts the underlying ArrayList<Book> according to title, then uses linear search
+    to find all the books with the given title. While this may be slightly less efficient
+    of a search algorithm than hashing might provide, structuring our program in this manner
+    allows for more rapid, simple sorting while keeping all of the book-related information
+    within the Book class, and, ultimately, the runtime in the average case is not all too
+    much worse for searching. Note that this method is also not case-sensitive. 
 
     @pre title != null
     @return ArrayList<Book> of the Books with the given title
@@ -156,17 +176,18 @@ public class LibraryCollection {
         // Initializes the ArrayList to be returned
         ArrayList<Book> titleList = new ArrayList<Book>();
 
-        // Puts the given title in lowercase to avoid case sensitivity
-        title = title.toLowerCase();
+        // Puts the given title in uppercase to avoid case sensitivity, considering that the
+        // Book class constructor ensures that all internal strings are in uppercase
+        title = title.toUpperCase();
 
         // We then iterate until we find a book with the given title
         int i = 0;
         while (i < bookList.size()) {
             Book curBook = bookList.get(i);
-            if (curBook.getTitle().toLowerCase().equals(title)) {
+            if (curBook.getTitle().equals(title)) {
                 // If we find a book with the given title, then we iterate through all such
                 // books, adding copies of them to our ArrayList to be returned
-                while (i < bookList.size() && curBook.getTitle().toLowerCase().equals(title)) {
+                while (i < bookList.size() && curBook.getTitle().equals(title)) {
                     // Adds the copy to the ArrayList to be returned
                     Book copy = new Book(curBook.getTitle(), curBook.getAuthor(), curBook.getRating(), curBook.getReadStatus());
                     titleList.add(copy);
@@ -198,7 +219,13 @@ public class LibraryCollection {
     the returned ArrayList<Book> has no connection to the underlying ArrayList<Book> of
     the class, and all Book objects within the returned ArrayList are copies of those in
     the actual ArrayList of the class. It's also assumed that the given rating is within 
-    the valid range from 1-5
+    the valid range from 1-5, so books that have not yet been rated cannot be searched for
+    in this manner. In terms of how this is actually done, the underlying ArrayList<Book>
+    is first sorted with respect to rating, and linear search is then used to find all
+    books with the given rating. While this is slightly less efficent than searching with 
+    a HashMap might be, structuring our program in this way allows for fast, simple sorting
+    while keeping all book-related information within the Book class, all without the 
+    runtime of the search algorithm being overly inefficient.
 
     @pre rating >= 1 && rating <= 5
     @return ArrayList<Book> of the Books currently in the collection with the given rating
@@ -245,7 +272,9 @@ public class LibraryCollection {
     Public method which takes in two Strings representing the title and author (respectively),
     and which adds the corresponding Book object into the underlying ArrayList<Book> for the 
     class. Note that this method assumes that the corresponding Book object has not already
-    been added to the library collection. This method then does not return anything.
+    been added to the library collection, with this assumption being ensured to be true by the 
+    input validation present within the class representing the View element of the Model-View-Controller. 
+    This method then does not return anything.
 
     @pre title != null && author != null && !alreadyInCollection(title, author)
      */
@@ -258,7 +287,15 @@ public class LibraryCollection {
     /*
     Public method that can be used to determine whether a book with the given title and
     author already exists within the collection. This method returns true if the book
-    is already in the collection, and false otherwise. 
+    is already in the collection, and false otherwise. Note that, in order to actually
+    try to find the given book, linear search is used on the underlying ArrayList. While
+    this is slightly less efficient than binary search may be, using this algorithm ensures
+    that if we have multiple books with the same author or the same title, then we know
+    without additional checking that the book we've found is the correct one, which is 
+    why we chose to implement this method in this manner. Furthermore, the average-case
+    runtime for linear search is not significantly worse than that of binary search,
+    especially when considering the additional checking required for binary search, which
+    further supports this decision.
 
     @pre title != null && author != null
     @return true if the book is already in our library collection, and false otherwise
@@ -286,7 +323,10 @@ public class LibraryCollection {
     all books in the collection are unique, and that a book with the given title and author
     is present within the library collection. Furthermore, if the book has already been marked
     as read, then nothing is actually changed within the program state. The method does not 
-    return anything.
+    return anything. Note again that the search algorithm used here is linear search, as is 
+    the case with the method above, and this is similarly used to prevent any ambiguity and
+    additional checking in the case that multiple books have the same author or the same title,
+    especially considering that linear search is still a relatively efficient algorithm.
 
     @pre title != null && author != null && alreadyInCollection(title, author)
      */
@@ -311,7 +351,11 @@ public class LibraryCollection {
     and author. Note that this method assumes that all books in the collection are unique, and
     that a book exists within the collection with the given title and author. Also, it is 
     assumed that the given rating is within the valid range from 1-5. The method then does not
-    return anything.
+    return anything. Note that these assumptions are ensured to be true via the input validation
+    present within the View class of the Model-View-Controller structure. Furthermore, as is the
+    case with the above two methods, linear search is used (rather than binary search) in order 
+    to prevent any ambiguity and additional checking in the case when multiple books have the 
+    same author or title, especially considering that linear search is still relatively efficient.
 
     @pre title != null && author != null && rating >= 1 && rating <= 5 && alreadyInCollection(title, author)
      */
@@ -339,7 +383,11 @@ public class LibraryCollection {
     maintain encapsulation, the returned ArrayList<Book> does not have any connections with the
     underlying ArrayList<Book> of the class, and that all of the Book objects in the returned
     ArrayList are copies of those in the underlying ArrayList. This method then does not have 
-    any preconditions, since it has no inputs and makes no assumptions.
+    any preconditions, since it has no inputs and makes no assumptions. Again, this method
+    utilizes the linear search algorithm, in this case to more simply ensure that the 
+    returned list is automatically sorted by title. The big-O efficiency also would not differ
+    if the underlying ArrayList was sorted according to read vs. unread, which is why we chose
+    not to utilize this approach. 
 
     @return ArrayList<Book> of all the Book objects in the collection that have been read
      */
@@ -374,7 +422,12 @@ public class LibraryCollection {
     maintain encapsulation, the returned ArrayList<Book> does not have any connections with the
     underlying ArrayList<Book> of the class, and that all of the Book objects in the returned
     ArrayList are copies of those in the underlying ArrayList. This method then does not have 
-    any preconditions, since it has no inputs and makes no assumptions.
+    any preconditions, since it has no inputs and makes no assumptions. As is the case with 
+    the above method, linear search is utilized in order to find these unread books, since this
+    helps to automatically ensure that the returned ArrayList<Book> is sorted according to title.
+    Furthermore, the big-O of this method would not differ if we were to pre-sort the underlying
+    array by read/unread, which is why we chose not to utilize this slightly more complicated
+    approach. 
 
     @return ArrayList<Book> of all the Book objects in the collection that have not been read
      */
@@ -402,11 +455,15 @@ public class LibraryCollection {
     }
 
     /*
-    Public method which returns a random Book object corresponding to a book in the library
+    Public method which returns a random Book object corresponding to an unread book in the library
     collection. In order to maintain encapsulation, this Book object is actually a copy of
     one of the Books in the underlying ArrayList<Book> of the class. This method also assumes
-    that at least one unread Book exists within the library collection. Note also that this method 
-    specifically returns a books that has not been read. 
+    that at least one Book exists within the library collection, though it need not necessarily
+    be unread, since a null return value is used to indicate that there are no unread books present
+    within the library collection. The class representing the View then ensures that these assumptions
+    are upheld. Note that the requirement that the collection not be empty is simply there to ensure
+    that the view throws an appropriate error message, according to whether there are no books or simply
+    no unread books. 
 
     @pre !isEmpty()
     @return Book object which represents a copy of a random unread book in the library collection, or null
@@ -436,7 +493,9 @@ public class LibraryCollection {
     was given with the spec, with the first line simply being "Title;Author", and all other
     lines describing books with this specific format structure (one book per line). Note, 
     though, that only books that are not already in the library collection are added to 
-    the library collection from the file. This method does not return anything.
+    the library collection from the file. This method does not return anything. Also, if
+    the given file cannot be found, then an error message is simply printed, and the method
+    automatically returns. 
 
     @pre filename != null && (file structure is as described in the spec)
      */
@@ -489,8 +548,6 @@ public class LibraryCollection {
         scanner.close();
     }
 
-    // Determines whether the collection of books is empty, returning true if it is,
-    // and false otherwise
     /*
     Public method for determining whether the library collection is empty; in other words,
     a method for determining whether the underlying ArrayList<Book> contains any Book

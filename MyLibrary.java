@@ -123,7 +123,7 @@ public class MyLibrary {
             // addBooks
             // Note that if the given file name is not valid, then an error message is printed to
             // the terminal, and no books are added to the collection. It is also assumed that if the
-            // given file name is valid, then it has the specified format. 
+            // given file name is valid, then it has the specified format.
             if (commandType.equals("addbooks")) {
                 // ask for file name and call addBooksFromFile function
                 System.out.println("Enter the book file name: ");

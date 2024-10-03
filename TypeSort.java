@@ -5,7 +5,7 @@ Course: CSC 335
 Purpose: This class is designed to simply define the TypeSort enumerated
 type, which can take on one of two values: TITLE and AUTHOR. This
 is used to reduce ambiguity when instructing the model on what type of sorting
-it should use.
+it should use when returning a sorted list of all books.
  */
 
 public enum TypeSort {

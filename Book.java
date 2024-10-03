@@ -79,20 +79,15 @@ public class Book {
     characteristics. Such a method will be utilized in the LibraryCollection class in
     order to quickly determine whether a book with a particular author and title is 
     already in the collection.  Note that this method is not case sensitive in terms
-    of the title and author instance variables, with everything being converted to 
-    lowercase for simplicity. 
+    of the title and author instance variables, since Book objects must necessarily
+    have their internal strings in all caps, based on the above constructors. 
 
     @pre other != null 
     @return true if the Book is equal to other, false otherwise
      */  
     public boolean equals(Book other) {
         // Checks to see whether these books have the same title and author
-        // Note that everything is converted to lowercase to avoid case sensitivity
-        String lowerTitle = this.title.toLowerCase();
-        String lowerOtherTitle = other.title.toLowerCase();
-        String lowerAuthor = this.author.toLowerCase();
-        String lowerOtherAuthor = other.author.toLowerCase();
-        if (lowerTitle.equals(lowerOtherTitle) && lowerAuthor.equals(lowerOtherAuthor)) {
+        if (this.title.equals(other.title) && this.author.equals(other.author)) {
             // If so, return true
             return true;
         } else {
@@ -127,7 +122,8 @@ public class Book {
 
     /*
     Public getter for the title of a particular book. Takes no inputs, and returns 
-    a String representing the book's title.
+    a String representing the book's title; this is obtained directly from the instance
+    field for the title. 
 
     @return a String representing the title of the Book
      */
@@ -137,7 +133,8 @@ public class Book {
 
     /*
     Public getter for the for the author of a particular book. Takes no inputs, and
-    returns a String representing the book's author
+    returns a String representing the book's author; this is obtained directly from 
+    the instance field for the author.
 
     @return a String representing the author of the book
      */
@@ -147,7 +144,8 @@ public class Book {
 
     /*
     Public getter for the rating of a particular book. Takes no inputs, and returns
-    an integer representing the book's rating
+    an integer representing the book's rating; this is obtained directly from the 
+    instance field for the rating.
 
     @return an int representing the rating associated with the book
      */
@@ -157,7 +155,9 @@ public class Book {
 
     /*
     Public getter for the read status of a particular book. Takes no inputs, and returns
-    a Read enum type representing the book's read status
+    a Read enum type representing the book's read status; this is obtained directly from
+    the instance variable for the Book's read status. Note that enums are immutable, so
+    this does not create any harmful escaping references!
 
     @return an enumerated type Read object representing the book's read status
      */
@@ -169,7 +169,8 @@ public class Book {
     Public method which returns a String representation of a given Book object. This String
     has the following format: "Title: book.title; Author: book.author; Rating: book.rating;
     Read Status: book.readStatus". Note that this method doesn't make any additional assumptions,
-    and takes no inputs, so it has no preconditions.
+    and takes no inputs, so it has no preconditions. Also, if the book has not been rated, then
+    that is explicitly mentioned within the string. 
 
     @return a String representing the given Book object
      */
@@ -197,17 +198,20 @@ public class Book {
     interface. Specifically, this Comparator object will be constructed in order to
     allow for the Book objects to be sorted in terms of their title, in ascending
     order, which will be necessary for the overall functionality of the LibraryCollection
-    class. This method takes no inputs, and returns an object of the Comparator class,
+    class. This method takes no inputs, and returns an object of the Comparator<Book> class,
     defined within the method itself. As a result, it has no preconditions. Note also
     that the method is defined as static in order to allow for such a Comparator to 
-    be constructed directly through the class rather than through an instance of it.
+    be constructed directly through the Book class rather than through an instance of it.
+    This method is not case-sensitive, considering that the internal Strings for all 
+    Book objects must necessarily be in all upper-case, ensuring appropriate sorting
+    of all Book objects. 
 
     @return a Comparator<Book> object used to compare Books alphabetically by title
      */
     public static Comparator<Book> makeComparatorTitle() {
         return new Comparator<Book>() {
             public int compare(Book book1, Book book2) {
-                return book1.title.toLowerCase().compareTo(book2.title.toLowerCase());
+                return book1.title.compareTo(book2.title);
             }
         };
     }
@@ -221,13 +225,16 @@ public class Book {
     defined within the method itself. As a result, it has no preconditions. Note also
     that the method is defined as static in order to allow for such a Comparator to 
     be constructed directly through the class rather than through an instance of it.
+    This method is also not case-sensitive, considering that the constructors for the
+    Book class ensure that all internal strings are necessarily in all upper-case, 
+    ensuring appropriate sorting of all Book objects. 
 
     @return a Comparator<Book> object used to compare Books alphabetically by author
      */
     public static Comparator<Book> makeComparatorAuthor() {
         return new Comparator<Book>() {
             public int compare(Book book1, Book book2) {
-                return book1.author.toLowerCase().compareTo(book2.author.toLowerCase());
+                return book1.author.compareTo(book2.author);
             }
         };
     }
@@ -241,6 +248,9 @@ public class Book {
     defined within the method itself. As a result, it has no preconditions. Note also
     that the method is defined as static in order to allow for such a Comparator to 
     be constructed directly through the class rather than through an instance of it.
+    For greater parallels with the previous Comparator factory methods, the compare()
+    method from the Integer class is used to find the return value of the Comparator's
+    compare() method. 
 
     @return a Comparator<Book> object used to compare Books based on their rating
      */
