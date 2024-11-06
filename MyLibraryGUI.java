@@ -13,6 +13,7 @@ convenient format.
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.*;
 import java.io.File;
 
@@ -29,6 +30,19 @@ public class MyLibraryGUI extends JFrame {
     private JFrame addBooksWindow;
     private JTextField addBooksTextField;
     private JLabel addBooksErrorLabel;
+
+    private JFrame addBookWindow;
+    private JTextField addBookAuthorField;
+    private JTextField addBookTitleField;
+
+    private JFrame setToReadWindow;
+    private JTextField setToReadAuthorField;
+    private JTextField setToReadTitleField;
+
+    private JFrame rateWindow;
+    private JTextField rateAuthorField;
+    private JTextField rateTitleField;
+    private JComboBox<Integer> rateComboBox;
 
     // Main method
     public static void main(String[] args) {
@@ -176,6 +190,61 @@ public class MyLibraryGUI extends JFrame {
                     // We also give the user a message that the books were added successfully
                     buttonOutputLabel.setText("Books added successfully from file");
                 }
+            } else if (command.equals("addBookSubmit")) {
+                // Gets the current text from our two text fields
+                String author = addBookAuthorField.getText();
+                String title = addBookTitleField.getText();
+
+                // Attempts to add the corresponding book to the library
+                if (!controller.cAlreadyInCollection(title, author)) {
+                    // If the book is not already in the library, we add it to the library, close
+                    // the window, and inform the user that the book was successfully added
+                    controller.cAddBook(title, author);
+                    addBookWindow.dispose();
+                    buttonOutputLabel.setText("Book added successfully");
+                }  else {
+                    // If the book has already been added to the library, then we also close the 
+                    // window, but give the user an error message
+                    addBookWindow.dispose();
+                    buttonOutputLabel.setText("Book has already been added to the library");
+                }
+            } else if (command.equals("setToReadSubmit")) {
+                // Gets the current text from our two text fields
+                String author = setToReadAuthorField.getText();
+                String title = setToReadTitleField.getText();
+
+                // Checks to see whether the book is actually in the library
+                if (!controller.cAlreadyInCollection(title, author)) {
+                    // If not, then we close the window and inform the user of this
+                    setToReadWindow.dispose();
+                    buttonOutputLabel.setText("Given book is not in current library collection");
+                } else {
+                    // Otherwise, we set the book to read, then inform the user that this was done 
+                    // successfully
+                    controller.cSetToRead(title, author);
+                    setToReadWindow.dispose();
+                    buttonOutputLabel.setText("Book was successfully set to read");
+                }
+            } else if (command.equals("rateSubmit")) {
+                // Gets the relevant pieces of text for the title and author, and the rating
+                String title = rateTitleField.getText();
+                String author = rateAuthorField.getText();
+                int rating = (Integer) rateComboBox.getSelectedItem();
+
+                // Checks to see whether the given book is actually in the collection
+                if (!controller.cAlreadyInCollection(title, author)) {
+                    // If not, then we close the window and give the user an error message
+                    rateWindow.dispose();
+                    buttonOutputLabel.setText("Given book is not in current library collection");
+                } else {
+                    // Otherwise, we set the rating of the given book, and tell the user that this 
+                    // was done successfully
+                    controller.cUpdateBookRating(title, author, rating);
+                    buttonOutputLabel.setText("Rating was successfully updated");
+
+                    // We then get rid of the rate window, since it is no longer needed
+                    rateWindow.dispose();
+                }
             }
         }
     }
@@ -228,7 +297,21 @@ public class MyLibraryGUI extends JFrame {
         Helper method for the suggestRead functionality
      */
     private void suggestReadHelper() {
-
+        // Checks to see whether the library collection currently empty
+        if (controller.cIsEmpty()) {
+            // If so, we inform the user of this via the button output label
+            buttonOutputLabel.setText("No books currently in the collection");
+        } else {
+            // Otherwise, we try to get a random unread book from the library
+            Book randBook = controller.cGetRandomBook();
+            if (randBook == null) {
+                // If there are no unread books, we inform the user of this
+                buttonOutputLabel.setText("No unread books are currently in the collection");
+            } else {
+                // Otherwise, we provide the text for this book
+                buttonOutputLabel.setText(randBook.getTitle() + " by " + randBook.getAuthor());
+            }
+        }
     }
 
     /*
@@ -249,20 +332,147 @@ public class MyLibraryGUI extends JFrame {
         Helper method for the addBook functionality
      */
     private void addBookHelper() {
+        // Constructs a new window, which will be used to aid with the addBook functionality
+        addBookWindow = new JFrame("addBook Window");
+        addBookWindow.setSize(1000, 150);
+        addBookWindow.setVisible(true);
 
+        // Constructs a panel, which will be used to control the organization of elements
+        // within the window
+        JPanel addBookPanel = new JPanel();
+        addBookWindow.add(addBookPanel);
+
+        // Constructs a secondary panel, which will only contain the text fields and labels
+        JPanel addBookTextPanel = new JPanel(new GridLayout(2, 2, 10, 10));
+
+        // Sets up the text fields, which will be used to get user input
+        addBookAuthorField = new JTextField("", 25);
+        addBookAuthorField.setSize(25, 30);
+        addBookTitleField = new JTextField("", 25);
+        addBookAuthorField.setSize(25, 30);
+
+        // Sets up the labels for the text fields
+        JLabel addBookAuthorLabel = new JLabel("Enter the author here: ", SwingConstants.RIGHT);
+        addBookAuthorLabel.setSize(20, 30);
+        JLabel addBookTitleLabel = new JLabel("Enter the title here: ", SwingConstants.RIGHT);
+        addBookTitleLabel.setSize(20, 30);
+
+        // Adds all of these to the text panel
+        addBookTextPanel.add(addBookTitleLabel);
+        addBookTextPanel.add(addBookTitleField);
+        addBookTextPanel.add(addBookAuthorLabel);
+        addBookTextPanel.add(addBookAuthorField);
+
+        // Adds this panel to the overall panel 
+        addBookPanel.add(addBookTextPanel);
+
+        // Constructs a button for actually submitting the input
+        JButton addBookTextButton = new JButton("Submit");
+        addBookTextButton.setActionCommand("addBookSubmit");
+        addBookTextButton.addActionListener(new ButtonListener());
+        addBookPanel.add(addBookTextButton);
     }
 
     /*
         Helper method for the setToRead functionality
      */
     private void setToReadHelper() {
+        // Constructs a new window, which will be used to aid with the setToRead functionality
+        setToReadWindow = new JFrame("setToRead Window");
+        setToReadWindow.setSize(1000, 150);
+        setToReadWindow.setVisible(true);
 
+        // Constructs a panel, which will be used to control the organization of elements
+        // within the window
+        JPanel setToReadPanel = new JPanel();
+        setToReadWindow.add(setToReadPanel);
+
+        // Constructs a secondary panel, which will only contain the text fields and labels
+        JPanel setToReadTextPanel = new JPanel(new GridLayout(2, 2, 10, 10));
+
+        // Sets up the text fields, which will be used to get user input
+        setToReadAuthorField = new JTextField("", 25);
+        setToReadAuthorField.setSize(25, 30);
+        setToReadTitleField = new JTextField("", 25);
+        setToReadAuthorField.setSize(25, 30);
+
+        // Sets up the labels for the text fields
+        JLabel setToReadAuthorLabel = new JLabel("Enter the author here: ", SwingConstants.RIGHT);
+        setToReadAuthorLabel.setSize(20, 30);
+        JLabel setToReadTitleLabel = new JLabel("Enter the title here: ", SwingConstants.RIGHT);
+        setToReadTitleLabel.setSize(20, 30);
+
+        // Adds all of these to the text panel
+        setToReadTextPanel.add(setToReadTitleLabel);
+        setToReadTextPanel.add(setToReadTitleField);
+        setToReadTextPanel.add(setToReadAuthorLabel);
+        setToReadTextPanel.add(setToReadAuthorField);
+
+        // Adds this panel to the overall panel 
+        setToReadPanel.add(setToReadTextPanel);
+
+        // Constructs a button for actually submitting the input
+        JButton setToReadTextButton = new JButton("Submit");
+        setToReadTextButton.setActionCommand("setToReadSubmit");
+        setToReadTextButton.addActionListener(new ButtonListener());
+        setToReadPanel.add(setToReadTextButton);
     }
 
     /*
         Helper method for the rate functionality
      */
     private void rateHelper() {
+        // Constructs a new window, which will be used to aid with the rate functionality
+        rateWindow = new JFrame("rate Window");
+        rateWindow.setSize(1000, 150);
+        rateWindow.setVisible(true);
 
+        // Constructs a panel, which will be used to control the organization of elements
+        // within the window
+        JPanel ratePanel = new JPanel();
+        rateWindow.add(ratePanel);
+
+        // Constructs a secondary panel, which will only contain the text fields and labels,
+        // along with our combo box
+        JPanel rateTextPanel = new JPanel(new GridLayout(3, 2, 10, 10));
+
+        // Sets up the text fields, which will be used to get user input
+        rateAuthorField = new JTextField("", 25);
+        rateAuthorField.setSize(25, 30);
+        rateTitleField = new JTextField("", 25);
+        rateAuthorField.setSize(25, 30);
+
+        // Sets up the labels for the text fields
+        JLabel rateAuthorLabel = new JLabel("Enter the author here: ", SwingConstants.RIGHT);
+        rateAuthorLabel.setSize(20, 30);
+        JLabel rateTitleLabel = new JLabel("Enter the title here: ", SwingConstants.RIGHT);
+        rateTitleLabel.setSize(20, 30);
+
+        // Sets up the ComboBox and its associated label for selecting the rating
+        Integer[] intArray = new Integer[5];
+        intArray[0] = Integer.valueOf(1);
+        intArray[1] = Integer.valueOf(2);
+        intArray[2] = Integer.valueOf(3);
+        intArray[3] = Integer.valueOf(4);
+        intArray[4] = Integer.valueOf(5);
+        rateComboBox = new JComboBox<Integer>(intArray);
+        JLabel rateComboBoxLabel = new JLabel("Select the new rating: ", SwingConstants.RIGHT);
+
+        // Adds all of these to the text panel
+        rateTextPanel.add(rateTitleLabel);
+        rateTextPanel.add(rateTitleField);
+        rateTextPanel.add(rateAuthorLabel);
+        rateTextPanel.add(rateAuthorField);
+        rateTextPanel.add(rateComboBoxLabel);
+        rateTextPanel.add(rateComboBox);
+
+        // Adds this panel to the overall panel 
+        ratePanel.add(rateTextPanel);
+
+        // Constructs a button for actually submitting the input
+        JButton rateTextButton = new JButton("Submit");
+        rateTextButton.setActionCommand("rateSubmit");
+        rateTextButton.addActionListener(new ButtonListener());
+        ratePanel.add(rateTextButton);
     }
 }
