@@ -16,6 +16,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.*;
 import java.io.File;
+import java.util.ArrayList;
 
 import javax.swing.*;
 
@@ -43,6 +44,23 @@ public class MyLibraryGUI extends JFrame {
     private JTextField rateAuthorField;
     private JTextField rateTitleField;
     private JComboBox<Integer> rateComboBox;
+
+    private JFrame searchWindow;
+    private JTextField searchAuthorTitleTextField;
+    private JLabel searchAuthorTitleLabel;
+    private JComboBox<Integer> searchRatingComboBox;
+    private JComboBox<String> searchByComboBox;
+    private JLabel searchOutputText;
+    private JLabel searchRatingLabel;
+    private JLabel searchComboBoxLabel;
+    private JButton searchOptionsSubmitButton;
+    private JButton searchAuthorTitleSubmitButton;
+    private JButton searchRatingSubmitButton;
+    private JLabel searchListOutputLabel;
+
+    private JFrame getBooksWindow;
+    private JComboBox<String> getBooksComboBox;
+    private JLabel getBooksListOutputLabel;
 
     // Main method
     public static void main(String[] args) {
@@ -245,6 +263,131 @@ public class MyLibraryGUI extends JFrame {
                     // We then get rid of the rate window, since it is no longer needed
                     rateWindow.dispose();
                 }
+            } else if (command.equals("searchOptionsSubmit")) {
+                // Gets the current option selected by the user, and converts to lowercase for simplicity
+                String curOption = (String) searchByComboBox.getSelectedItem();
+                curOption = curOption.toLowerCase();
+
+                // No matter what, the options combo box should disappear, as should its associated label and
+                // submit button
+                searchByComboBox.setVisible(false);
+                searchComboBoxLabel.setText("");
+                searchOptionsSubmitButton.setVisible(false);
+
+                // Updates the view according to the option selected by the user
+                if (curOption.equals("author")) {
+                    // Sets the label for the text field to ask for the author
+                    searchAuthorTitleLabel.setText("Enter the author to search for: ");
+
+                    // Makes the text field and submit button visible
+                    searchAuthorTitleTextField.setVisible(true);
+                    searchAuthorTitleSubmitButton.setVisible(true);
+                } else if (curOption.equals("title")) {
+                    // Sets the label for the text field to ask for the title
+                    searchAuthorTitleLabel.setText("Enter the title to search for: ");
+
+                    // Makes the text field and submit button visible
+                    searchAuthorTitleTextField.setVisible(true);
+                    searchAuthorTitleSubmitButton.setVisible(true);
+                } else if (curOption.equals("rating")) {
+                    // Makes the label, combo box, and submit button visible
+                    searchRatingLabel.setText("Select the rating to search for: ");
+                    searchRatingComboBox.setVisible(true);
+                    searchRatingSubmitButton.setVisible(true);
+                }
+            } else if (command.equals("searchAuthorTitleSubmit")) {
+                // First, determine whether we're looking for the title or author
+                String searchBy = (String) searchByComboBox.getSelectedItem();
+                searchBy = searchBy.toLowerCase();
+
+                // Sets the output labels to be blank
+                searchOutputText.setText("");
+                searchListOutputLabel.setText("");
+
+                // Then, we get the ArrayList of desired books
+                ArrayList<Book> ourBooks;
+                if (searchBy.equals("author")) {
+                    // Gets the given author
+                    String author = searchAuthorTitleTextField.getText();
+
+                    // Gets all of the books associated with this author
+                    ourBooks = controller.cGetBooksWithAuthor(author);
+                } else {
+                    // Gets the given title
+                    String title = searchAuthorTitleTextField.getText();
+
+                    // Gets all of the books associated with this title
+                    ourBooks = controller.cGetBooksWithTitle(title);
+                }
+
+                // Checks to see whether we actually obtained any books
+                if (ourBooks.size() == 0) {
+                    // If not, then we inform the user that there were no books matching their search
+                    searchOutputText.setText("No books matching your search :(");
+                } else {
+                    // Otherwise, we add these books to our scrollable output label
+                    String outputLabelText = "<html>";
+                    for (int i = 0; i < ourBooks.size(); i++) {
+                        outputLabelText += ourBooks.get(i).toString() + "<br>";
+                    }
+                    searchListOutputLabel.setText(outputLabelText);
+                }
+            } else if (command.equals("searchRatingSubmit")) {
+                // First, we make the output labels empty
+                searchOutputText.setText("");
+                searchListOutputLabel.setText("");
+
+                // We then get the rating to search for
+                int rating = (Integer) searchRatingComboBox.getSelectedItem();
+
+                // All books with this rating are obtained
+                ArrayList<Book> ourBooks = controller.cGetBooksWithRating(rating);
+
+                // Checks to see whether we actually found any books
+                if (ourBooks.size() == 0) {
+                    // If not, then we inform the user that there were no books matching their search
+                    searchOutputText.setText("No books matching your search :(");
+                } else {
+                    // Otherwise, we add these books to our scrollable output label
+                    String outputLabelText = "<html>";
+                    for (int i = 0; i < ourBooks.size(); i++) {
+                        outputLabelText += ourBooks.get(i).toString() + "<br>";
+                    }
+                    searchListOutputLabel.setText(outputLabelText);
+                }
+            } else if (command.equals("getBooksSubmit")) {
+                // First, we get the selected item from the combo box
+                String getBooksOption = (String) getBooksComboBox.getSelectedItem();
+
+                // We clear out whatever text is currently in the output label
+                getBooksListOutputLabel.setText("");
+
+                // We then determine how to retrieve our list of books
+                ArrayList<Book> ourBooks;
+                if (getBooksOption.equals("title")) {
+                    TypeSort enumSearchType = TypeSort.TITLE;
+                    ourBooks = controller.cGetSortedCollection(enumSearchType);
+                } else if (getBooksOption.equals("author")) {
+                    TypeSort enumSearchType = TypeSort.AUTHOR;
+                    ourBooks = controller.cGetSortedCollection(enumSearchType);
+                } else if (getBooksOption.equals("read")) {
+                    ourBooks = controller.cAllReadBooks();
+                } else {
+                    ourBooks = controller.cAllUnreadBooks();
+                }
+
+                // Finally, we check to see whether the retrieved list of books is empty
+                if (ourBooks.size() == 0) {
+                    // If so, then we inform the user that there were no books matching their request
+                    getBooksListOutputLabel.setText("No books matching your request :(");
+                } else {
+                    // Otherwise, we provide the user with a list of books matching their request
+                    String booksToDisplay = "<html>";
+                    for (int i = 0; i < ourBooks.size(); i++) {
+                        booksToDisplay += ourBooks.get(i).toString() + "<br>";
+                    }
+                    getBooksListOutputLabel.setText(booksToDisplay);
+                }
             }
         }
     }
@@ -316,16 +459,142 @@ public class MyLibraryGUI extends JFrame {
 
     /*
         Helper method for the search functionality
+        BROKEN! NEED TO MAKE IT SO THAT THINGS ARE ACTUALLY VISIBLE
      */
     private void searchHelper() {
+        // Constructs a new window, which will be used to aid with the search functionality
+        searchWindow = new JFrame("search Window");
+        searchWindow.setSize(800, 800);
+        searchWindow.setVisible(true);
 
+        // Constructs a panel, which will be used to organize components within the window
+        JPanel searchPanel = new JPanel(new BorderLayout());
+        searchWindow.add(searchPanel);
+
+        // Adds a label containing information about how to actually use this functionality
+        // to our primary panel
+        String searchInfoString = "<html>AUTHOR: Find books with a particular author<br>";
+        searchInfoString += "TITLE: Find books with a particular title<br>";
+        searchInfoString += "RATING: Find books with a particular rating<br>";
+        JLabel searchInfoLabel = new JLabel(searchInfoString, SwingConstants.CENTER);
+        searchPanel.add(searchInfoLabel, BorderLayout.NORTH);
+
+        // Constructs a secondary panel, which will be used to organize our text fields,
+        // combo boxes, and labels
+        JPanel searchTextPanel = new JPanel(new GridLayout(3, 3, 10, 10));
+
+
+        // Sets up the main combo box and associated label, which will allow the user to determine
+        // how they want to perform their search, and adds these to our grid panel
+        String[] searchOptionsArray = {"Title", "Author", "Rating"};
+        searchByComboBox = new JComboBox<String>(searchOptionsArray);
+        searchByComboBox.setVisible(true);
+        searchComboBoxLabel = new JLabel("Select the type of searching: ", SwingConstants.RIGHT);
+        searchComboBoxLabel.setVisible(true);
+        searchTextPanel.add(searchComboBoxLabel);
+        searchTextPanel.add(searchByComboBox);
+
+        // Constructs a submit button for the search options combo box, and adds this to our
+        // panel
+        searchOptionsSubmitButton = new JButton("Submit");
+        searchOptionsSubmitButton.setActionCommand("searchOptionsSubmit");
+        searchOptionsSubmitButton.addActionListener(new ButtonListener());
+        searchTextPanel.add(searchOptionsSubmitButton);
+
+        // Fills in the rest of our grid with the fields that we may need, depending on the
+        // search method given by the user. Note that we also add in additional buttons for submitting 
+        // the additional information from the user
+        searchAuthorTitleTextField = new JTextField("", 25);
+        searchAuthorTitleTextField.setVisible(false);
+        searchAuthorTitleLabel = new JLabel("", SwingConstants.RIGHT);
+        searchAuthorTitleSubmitButton = new JButton("Submit");
+        searchAuthorTitleSubmitButton.setActionCommand("searchAuthorTitleSubmit");
+        searchAuthorTitleSubmitButton.addActionListener(new ButtonListener());
+        searchAuthorTitleSubmitButton.setVisible(false);
+        searchTextPanel.add(searchAuthorTitleLabel);
+        searchTextPanel.add(searchAuthorTitleTextField);
+        searchTextPanel.add(searchAuthorTitleSubmitButton);
+
+        searchRatingLabel = new JLabel("", SwingConstants.RIGHT);
+        Integer[] ratingArray = {Integer.valueOf(1), Integer.valueOf(2), Integer.valueOf(3), Integer.valueOf(4), Integer.valueOf(5)};
+        searchRatingComboBox = new JComboBox<Integer>(ratingArray);
+        searchRatingComboBox.setVisible(false);
+        searchRatingSubmitButton = new JButton("Submit");
+        searchRatingSubmitButton.setActionCommand("searchRatingSubmit");
+        searchRatingSubmitButton.addActionListener(new ButtonListener());
+        searchRatingSubmitButton.setVisible(false);
+        searchTextPanel.add(searchRatingLabel);
+        searchTextPanel.add(searchRatingComboBox);
+        searchTextPanel.add(searchRatingSubmitButton);
+
+        // Adds our grid panel to our overall panel
+        searchTextPanel.setVisible(true);
+        searchPanel.add(searchTextPanel, BorderLayout.CENTER);
+
+        // Constructs a label which will be additionally used to tell the user if the given search was unsuccessful
+        searchOutputText = new JLabel("", SwingConstants.CENTER);
+        searchOutputText.setFont(new Font("Times New Roman", Font.BOLD, 20));
+        searchOutputText.setForeground(Color.RED);
+        searchPanel.add(searchOutputText, BorderLayout.EAST);
+
+        // Constructs a scrollable panel, which will be used to present the outputted list of books
+        JPanel booksOutputPanel = new JPanel();
+        JScrollPane booksOutputScrollPanel = new JScrollPane(booksOutputPanel);
+        booksOutputScrollPanel.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        searchPanel.add(booksOutputPanel, BorderLayout.SOUTH);
+
+        // Adds the label which will actually present the books to this panel
+        searchListOutputLabel = new JLabel("", SwingConstants.CENTER);
+        booksOutputPanel.add(searchListOutputLabel);
     }
 
     /*
         Helper method for the getBooks functionality
+        BROKEN! HOW TO MAKE IT SO THAT EVERYTHING SHOWS IN THE WINDOW?
      */
     private void getBooksHelper() {
+        // Constructs a new window, which will be used to aid with the getBooks functionality
+        getBooksWindow = new JFrame("getBooks Window");
+        getBooksWindow.setSize(800, 800);
+        getBooksWindow.setVisible(true);
 
+        // Constructs a panel, which will be used to organize components within the window
+        JPanel getBooksPanel = new JPanel(new BorderLayout());
+        getBooksWindow.add(getBooksPanel);
+
+        // Constructs a secondary, inner panel, which will be used to organize the label, combo
+        // box, and submit button
+        JPanel getBooksInputPanel = new JPanel();
+        getBooksPanel.add(getBooksInputPanel, BorderLayout.CENTER);
+
+        // Creates a label describing the getBooks functionality of the library collection
+        String getBooksInfoString = "<html>Retrieve a list of... <br>";
+        getBooksInfoString += "title: all books sorted by title<br>";
+        getBooksInfoString += "author: all books sorted by author<br>";
+        getBooksInfoString += "read: all read books<br>";
+        getBooksInfoString += "unread: all unread books<br>";
+        JLabel getBooksInfoLabel = new JLabel(getBooksInfoString, SwingConstants.CENTER);
+        getBooksPanel.add(getBooksInfoLabel, BorderLayout.NORTH);
+
+        // Constructs our combo box label, combo box, and submit button, adding these to our inner panel
+        JLabel getBooksComboLabel = new JLabel("Select from one of these options: ");
+        String[] getBooksOptions = {"title", "author", "read", "unread"};
+        getBooksComboBox = new JComboBox<String>(getBooksOptions);
+        JButton getBooksSubmitButton = new JButton("Submit");
+        getBooksSubmitButton.setActionCommand("getBooksSubmit");
+        getBooksSubmitButton.addActionListener(new ButtonListener());
+        
+        getBooksInputPanel.add(getBooksComboLabel);
+        getBooksInputPanel.add(getBooksComboBox);
+        getBooksInputPanel.add(getBooksSubmitButton);
+
+        // Sets up our scrollable label, which will contain the output of the getBooks functionality
+        getBooksListOutputLabel = new JLabel("");
+        JPanel getBooksOutputPanel = new JPanel();
+        JScrollPane getBooksOutputScrollPanel = new JScrollPane(getBooksOutputPanel);
+        getBooksOutputScrollPanel.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        getBooksPanel.add(getBooksOutputPanel, BorderLayout.SOUTH);
+        getBooksOutputPanel.add(getBooksListOutputLabel);
     }
 
     /*
