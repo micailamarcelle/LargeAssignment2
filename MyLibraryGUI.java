@@ -21,6 +21,11 @@ import java.util.ArrayList;
 import javax.swing.*;
 
 public class MyLibraryGUI extends JFrame {
+    // Declares all of the private instance variables of the GUI class. Note that these are utilized in
+    // order to allow for objects created within the helper methods of each functionality to be updated
+    // within the button listener method, which actually responds to user input
+
+    // Main window private instance variables
     private LibraryCollectionController controller;
     private JPanel panel;
     private JLabel primaryLabel;
@@ -28,23 +33,28 @@ public class MyLibraryGUI extends JFrame {
     private JLabel buttonOutputLabel;
     private JButton comboBoxSubmitButton;
 
+    // addBooks functionality private instance variables
     private JFrame addBooksWindow;
     private JTextField addBooksTextField;
     private JLabel addBooksErrorLabel;
 
+    // addBook functionality private instance variables
     private JFrame addBookWindow;
     private JTextField addBookAuthorField;
     private JTextField addBookTitleField;
 
+    // setToRead functionality private instance variables
     private JFrame setToReadWindow;
     private JTextField setToReadAuthorField;
     private JTextField setToReadTitleField;
 
+    // rate functionality private instance variables
     private JFrame rateWindow;
     private JTextField rateAuthorField;
     private JTextField rateTitleField;
     private JComboBox<Integer> rateComboBox;
 
+    // search functionality private instance variables
     private JFrame searchWindow;
     private JTextField searchAuthorTitleTextField;
     private JLabel searchAuthorTitleLabel;
@@ -56,13 +66,18 @@ public class MyLibraryGUI extends JFrame {
     private JButton searchOptionsSubmitButton;
     private JButton searchAuthorTitleSubmitButton;
     private JButton searchRatingSubmitButton;
-    private JLabel searchListOutputLabel;
+    private JComboBox<String> searchOutputDropdown;
 
+    // getBooks functionality private instance variables
     private JFrame getBooksWindow;
     private JComboBox<String> getBooksComboBox;
-    private JLabel getBooksListOutputLabel;
+    private JComboBox<String> getBooksOutputDropdown;
+    private JLabel getBooksErrorLabel;
 
-    // Main method
+    /*
+        Main method for the GUI view, which constructs the actual GUI object, sets up the main window of
+        the GUI, and makes this main window visible to the user
+     */
     public static void main(String[] args) {
         MyLibraryGUI view = new MyLibraryGUI();
         view.start();
@@ -70,7 +85,8 @@ public class MyLibraryGUI extends JFrame {
     }
 
     /*
-        Constructor for the GUI
+        Constructor for the GUI, which constructs the LibraryCollectionController object that represents the
+        primary data structure underlying the GUI, and which sets up the main window of the GUI
      */
     public MyLibraryGUI() {
         controller = new LibraryCollectionController();
@@ -78,7 +94,11 @@ public class MyLibraryGUI extends JFrame {
     }
 
     /*
-        Sets up the GUI
+        Private helper method which aids in setting up the GUI. This method sets the size of the main window,
+        adds a label to the main window describing the functionalities available to the user, and adds in a 
+        label which will be used to inform the user of the results of certain functionalities of the library 
+        collection. This method also adds a window listener for closing the window, which ensures that the program
+        will stop running once the main window of the GUI is closed.
      */
     private void setUp() {
         // Sets the size of the frame
@@ -127,7 +147,9 @@ public class MyLibraryGUI extends JFrame {
     }
 
     /*
-        Sets up the necessary text fields 
+        Private helper method which is utilized in order to set up the dropdown menu for functionality options
+        the user can select from, along with setting up the label associated with this dropdown menu and the 
+        button used to actually submit the selection within this dropdown menu.
      */
     private void start() {
         // Sets up the combo box, with all of the possible options that the user can select from
@@ -151,7 +173,10 @@ public class MyLibraryGUI extends JFrame {
     }
 
     /*
-        Button listener
+        Private class which represents the button listener, with ButtonListener objects being used to respond
+        to the user anytime they click one of the submit buttons within the program. The actionPerformed method 
+        in particular determines exactly which button was pressed, then responds appropriately, updating the 
+        GUI according to the new information that the user has provided. 
      */
     private class ButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
@@ -300,9 +325,12 @@ public class MyLibraryGUI extends JFrame {
                 String searchBy = (String) searchByComboBox.getSelectedItem();
                 searchBy = searchBy.toLowerCase();
 
-                // Sets the output labels to be blank
+                // Sets the output label to be blank
                 searchOutputText.setText("");
-                searchListOutputLabel.setText("");
+
+                // Removes all items from the dropdown menu, and makes this dropdown invisible
+                searchOutputDropdown.removeAllItems();
+                searchOutputDropdown.setVisible(false);
 
                 // Then, we get the ArrayList of desired books
                 ArrayList<Book> ourBooks;
@@ -325,17 +353,23 @@ public class MyLibraryGUI extends JFrame {
                     // If not, then we inform the user that there were no books matching their search
                     searchOutputText.setText("No books matching your search :(");
                 } else {
-                    // Otherwise, we add these books to our scrollable output label
-                    String outputLabelText = "<html>";
-                    for (int i = 0; i < ourBooks.size(); i++) {
-                        outputLabelText += ourBooks.get(i).toString() + "<br>";
+                    // Otherwise, we iterate through all of the books that we find, adding the string representation
+                    // of each one to our dropdown menu of books
+                    for (Book book : ourBooks) {
+                        searchOutputDropdown.addItem(book.toString());
                     }
-                    searchListOutputLabel.setText(outputLabelText);
+
+                    // Makes this dropdown menu visible to the user
+                    searchOutputDropdown.setVisible(true);
                 }
             } else if (command.equals("searchRatingSubmit")) {
-                // First, we make the output labels empty
+                // First, we make the output label empty
                 searchOutputText.setText("");
-                searchListOutputLabel.setText("");
+
+                // Along with removing all of the items currently in the dropdown menu, and making 
+                // this dropdown menu invisible
+                searchOutputDropdown.removeAllItems();
+                searchOutputDropdown.setVisible(false);
 
                 // We then get the rating to search for
                 int rating = (Integer) searchRatingComboBox.getSelectedItem();
@@ -348,19 +382,26 @@ public class MyLibraryGUI extends JFrame {
                     // If not, then we inform the user that there were no books matching their search
                     searchOutputText.setText("No books matching your search :(");
                 } else {
-                    // Otherwise, we add these books to our scrollable output label
-                    String outputLabelText = "<html>";
-                    for (int i = 0; i < ourBooks.size(); i++) {
-                        outputLabelText += ourBooks.get(i).toString() + "<br>";
+                    // Otherwise, we iterate through all of the returned books, adding the string 
+                    // representations of these to our dropdown menu in order to make them easily 
+                    // viewable by the user
+                    for (Book book : ourBooks) {
+                        searchOutputDropdown.addItem(book.toString());
                     }
-                    searchListOutputLabel.setText(outputLabelText);
+
+                    // We then make this dropdown visible
+                    searchOutputDropdown.setVisible(true);
                 }
             } else if (command.equals("getBooksSubmit")) {
                 // First, we get the selected item from the combo box
                 String getBooksOption = (String) getBooksComboBox.getSelectedItem();
 
-                // We clear out whatever text is currently in the output label
-                getBooksListOutputLabel.setText("");
+                // We first remove all items currently in our dropdown menu, and make the dropdown invisible
+                getBooksOutputDropdown.removeAllItems();
+                getBooksOutputDropdown.setVisible(false);
+
+                // We also clear out any text in our error label
+                getBooksErrorLabel.setText("");
 
                 // We then determine how to retrieve our list of books
                 ArrayList<Book> ourBooks;
@@ -379,21 +420,25 @@ public class MyLibraryGUI extends JFrame {
                 // Finally, we check to see whether the retrieved list of books is empty
                 if (ourBooks.size() == 0) {
                     // If so, then we inform the user that there were no books matching their request
-                    getBooksListOutputLabel.setText("No books matching your request :(");
+                    getBooksErrorLabel.setText("No books matching your request :(");
                 } else {
-                    // Otherwise, we provide the user with a list of books matching their request
-                    String booksToDisplay = "<html>";
-                    for (int i = 0; i < ourBooks.size(); i++) {
-                        booksToDisplay += ourBooks.get(i).toString() + "<br>";
+                    // Otherwise, we fill our dropdown menu with all of the string representations of 
+                    // the books being output by the command
+                    for (Book book : ourBooks) {
+                        getBooksOutputDropdown.addItem(book.toString());
                     }
-                    getBooksListOutputLabel.setText(booksToDisplay);
+
+                    // The dropdown menu is then made visible
+                    getBooksOutputDropdown.setVisible(true);
                 }
             }
         }
     }
 
     /*
-        Helper method for the addBooks functionality
+        Private helper method for the addBooks functionality, which sets up the additional window where the 
+        user can enter the text file to read from, and which adds informative labels and a submit button to 
+        this window as well.
      */
     private void addBooksHelper() {
         // Creates a new window, which will be used for the addBooks functionality
@@ -437,7 +482,10 @@ public class MyLibraryGUI extends JFrame {
     }
 
     /*
-        Helper method for the suggestRead functionality
+        Private helper method for the suggestRead functionality, which simply provides the user with
+        information about a random unread book in the library collection via the main window if such 
+        a book exists, or which informs the user that such a book does not currently exist in the 
+        collection.
      */
     private void suggestReadHelper() {
         // Checks to see whether the library collection currently empty
@@ -458,13 +506,15 @@ public class MyLibraryGUI extends JFrame {
     }
 
     /*
-        Helper method for the search functionality
-        BROKEN! NEED TO MAKE IT SO THAT THINGS ARE ACTUALLY VISIBLE
+        Private helper method for the search functionality, which sets up a new window that the user can 
+        utilize in order to provide information about their desired search, ensuring that this window contains
+        informative labels and any necessary submit buttons. This window will also be used to provide the 
+        user with the output of their search.
      */
     private void searchHelper() {
         // Constructs a new window, which will be used to aid with the search functionality
         searchWindow = new JFrame("search Window");
-        searchWindow.setSize(800, 800);
+        searchWindow.setSize(1000, 200);
         searchWindow.setVisible(true);
 
         // Constructs a panel, which will be used to organize components within the window
@@ -482,6 +532,7 @@ public class MyLibraryGUI extends JFrame {
         // Constructs a secondary panel, which will be used to organize our text fields,
         // combo boxes, and labels
         JPanel searchTextPanel = new JPanel(new GridLayout(3, 3, 10, 10));
+        searchTextPanel.setSize(100, 50);
 
 
         // Sets up the main combo box and associated label, which will allow the user to determine
@@ -537,25 +588,25 @@ public class MyLibraryGUI extends JFrame {
         searchOutputText.setForeground(Color.RED);
         searchPanel.add(searchOutputText, BorderLayout.EAST);
 
-        // Constructs a scrollable panel, which will be used to present the outputted list of books
-        JPanel booksOutputPanel = new JPanel();
-        JScrollPane booksOutputScrollPanel = new JScrollPane(booksOutputPanel);
-        booksOutputScrollPanel.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        searchPanel.add(booksOutputPanel, BorderLayout.SOUTH);
+        // Constructs a dropdown menu, which will be used to provide the user with the results of their search
+        // in clearly visible, easy to navigate manner
+        searchOutputDropdown = new JComboBox<String>();
+        searchPanel.add(searchOutputDropdown, BorderLayout.SOUTH);
 
-        // Adds the label which will actually present the books to this panel
-        searchListOutputLabel = new JLabel("", SwingConstants.CENTER);
-        booksOutputPanel.add(searchListOutputLabel);
+        // Makes this dropdown menu invisible, for now
+        searchOutputDropdown.setVisible(false);
     }
 
     /*
-        Helper method for the getBooks functionality
-        BROKEN! HOW TO MAKE IT SO THAT EVERYTHING SHOWS IN THE WINDOW?
+        Private helper method for the getBooks functionality, which constructs a new window that can be used
+        to select the type of book list that the user would like to view. This window is set up to contain 
+        informative labels and any necessary submit buttons, and it will also be used to provide the user with 
+        the output of the getBooks functionality.
      */
     private void getBooksHelper() {
         // Constructs a new window, which will be used to aid with the getBooks functionality
         getBooksWindow = new JFrame("getBooks Window");
-        getBooksWindow.setSize(800, 800);
+        getBooksWindow.setSize(1000, 300);
         getBooksWindow.setVisible(true);
 
         // Constructs a panel, which will be used to organize components within the window
@@ -566,6 +617,13 @@ public class MyLibraryGUI extends JFrame {
         // box, and submit button
         JPanel getBooksInputPanel = new JPanel();
         getBooksPanel.add(getBooksInputPanel, BorderLayout.CENTER);
+
+        // Creates a label which will inform the user when their search is, for whatever reason,
+        // unsuccessful, producing no books
+        getBooksErrorLabel = new JLabel("", SwingConstants.CENTER);
+        getBooksErrorLabel.setFont(new Font("Times New Roman", Font.BOLD, 20));
+        getBooksErrorLabel.setForeground(Color.RED);
+        getBooksPanel.add(getBooksErrorLabel, BorderLayout.EAST);
 
         // Creates a label describing the getBooks functionality of the library collection
         String getBooksInfoString = "<html>Retrieve a list of... <br>";
@@ -588,17 +646,20 @@ public class MyLibraryGUI extends JFrame {
         getBooksInputPanel.add(getBooksComboBox);
         getBooksInputPanel.add(getBooksSubmitButton);
 
-        // Sets up our scrollable label, which will contain the output of the getBooks functionality
-        getBooksListOutputLabel = new JLabel("");
-        JPanel getBooksOutputPanel = new JPanel();
-        JScrollPane getBooksOutputScrollPanel = new JScrollPane(getBooksOutputPanel);
-        getBooksOutputScrollPanel.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        getBooksPanel.add(getBooksOutputPanel, BorderLayout.SOUTH);
-        getBooksOutputPanel.add(getBooksListOutputLabel);
+        // Sets up our dropdown menu, which will contain the output of the getBooks functionality, presenting
+        // it in a form that makes it simple for the user to view
+        getBooksOutputDropdown = new JComboBox<String>();
+        getBooksPanel.add(getBooksOutputDropdown, BorderLayout.SOUTH);
+        
+        // Makes this dropdown menu invisible for now
+        getBooksOutputDropdown.setVisible(false);
     }
 
     /*
-        Helper method for the addBook functionality
+        Private helper method for the addBook functionality, which constructs a new window that the user can
+        utilize in order to enter information about the new book that they would like to add to the collection.
+        Note that information about whether or not this addition was successful will then be provided to the user
+        via a label within the main window of the GUI.
      */
     private void addBookHelper() {
         // Constructs a new window, which will be used to aid with the addBook functionality
@@ -643,7 +704,10 @@ public class MyLibraryGUI extends JFrame {
     }
 
     /*
-        Helper method for the setToRead functionality
+        Private helper method for the setToRead functionality, which sets up a new window that the user can
+        utilize in order to enter information about the book that they would like to set to read. Note that 
+        information about whether this action is successful or not will then be provided to the user via the 
+        main window of the GUI.
      */
     private void setToReadHelper() {
         // Constructs a new window, which will be used to aid with the setToRead functionality
@@ -688,7 +752,10 @@ public class MyLibraryGUI extends JFrame {
     }
 
     /*
-        Helper method for the rate functionality
+        Private helper method for the rate functionality, which sets up a new window that the user can utilize
+        in order to enter information about the book that they would like to rate, and what rating they would
+        like to give it. Note that information about whether or not this action is successful will be provided
+        to the user via the main window of the GUI.
      */
     private void rateHelper() {
         // Constructs a new window, which will be used to aid with the rate functionality
