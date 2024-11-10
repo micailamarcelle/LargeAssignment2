@@ -1,4 +1,4 @@
-package tests;
+//package tests;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -9,8 +9,8 @@ import java.util.Comparator;
 
 import org.junit.jupiter.api.Test;
 
-import model.Book;
-import model.Read;
+//import model.Book;
+//import model.Read;
 
 public class testBookClass {
 	@Test
