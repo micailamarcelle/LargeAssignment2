@@ -362,6 +362,17 @@ public class MyLibraryGUI extends JFrame {
                     // Makes this dropdown menu visible to the user
                     searchOutputDropdown.setVisible(true);
                 }
+
+                // We then make the elements used for the actual search invisible once again, and the 
+                // elemnts for selecting the type of search visible, so the user can select this once
+                // again
+                searchByComboBox.setVisible(true);
+                searchComboBoxLabel.setText("Select the type of searching: ");
+                searchOptionsSubmitButton.setVisible(true);
+                searchAuthorTitleLabel.setText("");
+                searchAuthorTitleTextField.setVisible(false);
+                searchAuthorTitleTextField.setText("");
+                searchAuthorTitleSubmitButton.setVisible(false);
             } else if (command.equals("searchRatingSubmit")) {
                 // First, we make the output label empty
                 searchOutputText.setText("");
@@ -392,6 +403,17 @@ public class MyLibraryGUI extends JFrame {
                     // We then make this dropdown visible
                     searchOutputDropdown.setVisible(true);
                 }
+
+                // We then make the elements used for the actual search invisible once again, and the 
+                // elemnts for selecting the type of search visible, so the user can select this once
+                // again
+                searchByComboBox.setVisible(true);
+                searchComboBoxLabel.setText("Select the type of searching: ");
+                searchOptionsSubmitButton.setVisible(true);
+                searchRatingLabel.setText("");
+                searchRatingComboBox.setVisible(false);
+                searchRatingComboBox.setSelectedIndex(0);
+                searchRatingSubmitButton.setVisible(false);
             } else if (command.equals("getBooksSubmit")) {
                 // First, we get the selected item from the combo box
                 String getBooksOption = (String) getBooksComboBox.getSelectedItem();
