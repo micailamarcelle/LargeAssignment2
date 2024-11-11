@@ -1,3 +1,11 @@
+/*
+File: testMyLibrary.java
+Authors: Micaila Marcelle (micailamarcelle) and Elise Bushra (ebushra)
+Course: CSC 335
+Purpose: Provides JUnit tests for the MyLibrary class, which acts as the primary
+element of the back-end for the library collection system.
+ */
+
 //package tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

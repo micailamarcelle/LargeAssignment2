@@ -1,3 +1,11 @@
+/*
+File: testBookClass.java
+Authors: Micaila Marcelle (micailamarcelle) and Elise Bushra (ebushra)
+Course: CSC 335
+Purpose: Provides JUnit tests for the Book class of the overall library collection
+system
+ */
+
 //package tests;
 
 
